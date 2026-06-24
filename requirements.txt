@@ -1,0 +1,12 @@
+PyYAML>=6.0
+
+pandas>=2.3.0
+numpy>=2.3.0
+
+yfinance>=0.2.65
+pykrx>=1.0.51
+
+requests>=2.32.0
+beautifulsoup4>=4.13.0
+
+python-dotenv>=1.1.0
