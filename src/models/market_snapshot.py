@@ -22,7 +22,7 @@ class MarketSnapshot:
     sp500: float | None = None
     nasdaq: float | None = None
 
-    sox: float | None = None
     vix: float | None = None
+    sox: float | None = None
 
     usdkrw: float | None = None

@@ -1,21 +1,25 @@
+"""
+Configuration Manager
+
+Stock-CIO
+"""
+
 from pathlib import Path
+
 import yaml
 
 
 class ConfigManager:
-    """Application configuration manager."""
+    """YAML 설정 관리"""
 
-    def __init__(self) -> None:
-        self.config_path = Path("10_CONFIG/app.yaml")
-        self.config = {}
+    CONFIG_DIR = Path("10_CONFIG")
 
-    def load(self) -> None:
-        """Load configuration file."""
+    def load(self, name: str) -> dict:
 
-        with open(self.config_path, "r", encoding="utf-8") as file:
-            self.config = yaml.safe_load(file)
+        path = self.CONFIG_DIR / f"{name}.yaml"
 
-    def get(self, key: str):
-        """Return config value."""
+        if not path.exists():
+            raise FileNotFoundError(path)
 
-        return self.config.get(key)
+        with open(path, "r", encoding="utf-8") as f:
+            return yaml.safe_load(f)
