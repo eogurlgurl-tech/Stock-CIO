@@ -3,43 +3,44 @@ Core Engine
 
 Stock-CIO
 """
-from analyzers.score_engine import ScoreEngine
-
-from reports.morning_brief import MorningBrief
-
-from utils.logger import Logger
 
 from datetime import datetime
 
+from analyzers.score_engine import ScoreEngine
 from collectors.market_data_loader import MarketDataLoader
+from reports.morning_brief import MorningBrief
+from utils.logger import Logger
 
 
 class CIOEngine:
     """Main application engine."""
 
-    VERSION = "0.1.0-alpha"
+    VERSION = "0.2.0-alpha"
 
     def __init__(self) -> None:
         self.started_at = datetime.now()
 
         self.logger = Logger.get_logger()
-          
-        # MarketDataLoader는 프로그램 시작 시 한 번만 생성
-        self.market_loader = MarketDataLoader()
 
+        # Components
+        self.market_loader = MarketDataLoader()
+        self.score_engine = ScoreEngine()
         self.brief = MorningBrief()
 
-        self.score_engine = ScoreEngine()
+        # Shared Context
+        self.context = {}
 
     def initialize(self) -> None:
         self.logger.info("Initialize System")
 
     def load_data(self):
-        """Load market data."""
+        """Load market data only once."""
 
         print("[2/5] Load Market Data")
 
         market = self.market_loader.load()
+
+        self.context["market"] = market
 
         print(f"Market : {market.market}")
         print(f"KOSPI  : {market.kospi}")
@@ -47,16 +48,16 @@ class CIOEngine:
         print(f"S&P500 : {market.sp500}")
         print(f"VIX    : {market.vix}")
 
-        return market
-
     def analyze(self) -> None:
         """Analyze Market"""
 
         print("[3/5] Analyze")
 
-        market = self.market_loader.load()
+        market = self.context["market"]
 
         score = self.score_engine.calculate(market)
+
+        self.context["score"] = score
 
         print()
         print("=" * 45)
@@ -77,18 +78,30 @@ class CIOEngine:
         print("=" * 45)
 
     def generate_reports(self) -> None:
-        """Generate reports."""
+        """Generate Morning Brief"""
 
         print("[4/5] Generate Reports")
 
-        market = self.market_loader.load()
+        market = self.context["market"]
 
         report = self.brief.generate(market)
+
+        self.context["report"] = report
 
         print(f"Report Saved : {report}")
 
     def ready(self) -> None:
         self.logger.info("System Ready")
+
+        print()
+        print("=" * 60)
+        print("System Context")
+        print("=" * 60)
+
+        for key in self.context:
+            print(f"✔ {key}")
+
+        print("=" * 60)
 
     def start(self) -> None:
         """Start application."""
@@ -100,11 +113,8 @@ class CIOEngine:
         print(f"Started : {self.started_at:%Y-%m-%d %H:%M:%S}")
         print("=" * 60)
 
-        # 시장 데이터 읽기
-        market = self.load_data()
-
-        # 이후 단계
         self.initialize()
+        self.load_data()
         self.analyze()
         self.generate_reports()
         self.ready()
