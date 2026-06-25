@@ -19,16 +19,50 @@ class MacroAnalyzer:
 
         score = 0
 
-        # NASDAQ
-        if market.nasdaq > 20000:
-            score += 10
+        # ==========================
+        # NASDAQ (0 ~ 10)
+        # ==========================
 
-        # S&P500
-        if market.sp500 > 6000:
+        if market.nasdaq >= 25000:
             score += 10
+        elif market.nasdaq >= 24000:
+            score += 8
+        elif market.nasdaq >= 23000:
+            score += 6
+        elif market.nasdaq >= 22000:
+            score += 4
+        else:
+            score += 2
 
-        # VIX
-        if market.vix < 20:
+        # ==========================
+        # S&P500 (0 ~ 10)
+        # ==========================
+
+        if market.sp500 >= 7000:
             score += 10
+        elif market.sp500 >= 6500:
+            score += 8
+        elif market.sp500 >= 6000:
+            score += 6
+        elif market.sp500 >= 5500:
+            score += 4
+        else:
+            score += 2
+
+        # ==========================
+        # VIX (0 ~ 10)
+        # 낮을수록 좋음
+        # ==========================
+
+        if market.vix <= 15:
+            score += 10
+        elif market.vix <= 18:
+            score += 8
+        elif market.vix <= 20:
+            score += 6
+        elif market.vix <= 25:
+            score += 4
+        else:
+            score += 2
 
         return score

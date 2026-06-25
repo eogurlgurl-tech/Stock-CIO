@@ -8,6 +8,7 @@ from datetime import datetime
 
 from analyzers.score_engine import ScoreEngine
 from collectors.market_data_loader import MarketDataLoader
+from core.decision_engine import DecisionEngine
 from reports.morning_brief import MorningBrief
 from utils.logger import Logger
 
@@ -18,6 +19,7 @@ class CIOEngine:
     VERSION = "0.2.0-alpha"
 
     def __init__(self) -> None:
+
         self.started_at = datetime.now()
 
         self.logger = Logger.get_logger()
@@ -25,6 +27,7 @@ class CIOEngine:
         # Components
         self.market_loader = MarketDataLoader()
         self.score_engine = ScoreEngine()
+        self.decision_engine = DecisionEngine()
         self.brief = MorningBrief()
 
         # Shared Context
@@ -33,8 +36,8 @@ class CIOEngine:
     def initialize(self) -> None:
         self.logger.info("Initialize System")
 
-    def load_data(self):
-        """Load market data only once."""
+    def load_data(self) -> None:
+        """Load market data"""
 
         print("[2/5] Load Market Data")
 
@@ -56,8 +59,10 @@ class CIOEngine:
         market = self.context["market"]
 
         score = self.score_engine.calculate(market)
-
         self.context["score"] = score
+
+        decision = self.decision_engine.make_decision(score)
+        self.context["decision"] = decision
 
         print()
         print("=" * 45)
@@ -74,6 +79,19 @@ class CIOEngine:
         print("-" * 45)
 
         print(f"TOTAL SCORE : {score.total}")
+        print(f"GRADE       : {score.grade}")
+        print(f"RATING      : {score.stars}")
+
+        print("=" * 45)
+
+        print()
+        print("Today's Decision")
+        print("=" * 45)
+
+        print(f"Market Status : {decision.market_status}")
+        print(f"Action        : {decision.action}")
+        print(f"Cash Ratio    : {decision.cash_ratio}%")
+        print(f"Stock Ratio   : {decision.stock_ratio}%")
 
         print("=" * 45)
 
@@ -83,8 +101,14 @@ class CIOEngine:
         print("[4/5] Generate Reports")
 
         market = self.context["market"]
+        score = self.context["score"]
+        decision = self.context["decision"]
 
-        report = self.brief.generate(market)
+        report = self.brief.generate(
+            market,
+            score,
+            decision,
+        )
 
         self.context["report"] = report
 
