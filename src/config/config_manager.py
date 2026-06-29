@@ -1,25 +1,75 @@
 """
-Configuration Manager
+Decision Engine
 
 Stock-CIO
 """
 
-from pathlib import Path
+from src.config.config_manager import ConfigManager
+from src.models.cio_decision import CIODecision
+from src.models.score import Score
 
-import yaml
 
+class DecisionEngine:
+    """Score를 투자 의사결정으로 변환"""
 
-class ConfigManager:
-    """YAML 설정 관리"""
+    def __init__(self):
 
-    CONFIG_DIR = Path("10_CONFIG")
+        config = ConfigManager().load("strategy")
 
-    def load(self, name: str) -> dict:
+        self.strategy = config["decision"]
+        self.portfolio = config["portfolio"]
 
-        path = self.CONFIG_DIR / f"{name}.yaml"
+    def make_decision(self, score: Score) -> CIODecision:
 
-        if not path.exists():
-            raise FileNotFoundError(path)
+        decision = CIODecision()
 
-        with open(path, "r", encoding="utf-8") as f:
-            return yaml.safe_load(f)
+        total = score.total
+
+        if total >= self.strategy["strong_buy"]:
+
+            decision.market_status = "BULLISH"
+            decision.action = "STRONG BUY"
+
+            decision.cash_ratio = 100 - self.portfolio["max_position"]
+            decision.stock_ratio = self.portfolio["max_position"]
+
+        elif total >= self.strategy["buy"]:
+
+            decision.market_status = "BULLISH"
+            decision.action = "BUY"
+
+            decision.cash_ratio = 100 - (
+                self.portfolio["initial_position"]
+                + self.portfolio["add_position"]
+            )
+
+            decision.stock_ratio = (
+                self.portfolio["initial_position"]
+                + self.portfolio["add_position"]
+            )
+
+        elif total >= self.strategy["watch"]:
+
+            decision.market_status = "NEUTRAL"
+            decision.action = "HOLD"
+
+            decision.cash_ratio = 50
+            decision.stock_ratio = 50
+
+        elif total >= self.strategy["reduce"]:
+
+            decision.market_status = "CAUTION"
+            decision.action = "REDUCE"
+
+            decision.cash_ratio = 70
+            decision.stock_ratio = 30
+
+        else:
+
+            decision.market_status = "BEARISH"
+            decision.action = "SELL"
+
+            decision.cash_ratio = 100
+            decision.stock_ratio = 0
+
+        return decision

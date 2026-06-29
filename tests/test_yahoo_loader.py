@@ -1,4 +1,4 @@
-from collectors.yahoo_loader import YahooLoader
+from src.collectors.yahoo_loader import YahooLoader
 
 loader = YahooLoader()
 
