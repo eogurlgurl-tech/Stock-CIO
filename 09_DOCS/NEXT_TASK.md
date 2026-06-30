@@ -13,21 +13,17 @@ Sprint 7
 
 ---
 
-# Feature
+# Current Feature
 
-FEATURE-013
+FEATURE-014
 
-News Analyzer Integration
+Morning Brief Upgrade
 
 ---
 
 # Goal
 
-Generate News Score
-
-Reflect News Score to CIO Score
-
-Generate News Section in Morning Brief
+Upgrade Morning Brief into a practical CIO Daily Report.
 
 ---
 
@@ -35,41 +31,53 @@ Generate News Section in Morning Brief
 
 STEP 1
 
-Review NewsCollector
+Review MorningBrief
 
 ↓
 
 STEP 2
 
-Implement NewsAnalyzer
+Global Market Summary
 
 ↓
 
 STEP 3
 
-Connect ScoreEngine
+Korea Market Summary
 
 ↓
 
 STEP 4
 
-Connect DecisionEngine
+News Summary
 
 ↓
 
 STEP 5
 
-Update Morning Brief
+Risk Analysis
 
 ↓
 
 STEP 6
 
-Unit Test
+Watch List
 
 ↓
 
 STEP 7
+
+Today's CIO Comment
+
+↓
+
+STEP 8
+
+Unit Test
+
+↓
+
+STEP 9
 
 Integration Test
 
@@ -84,6 +92,8 @@ Commit
 Feature Development Only
 
 One Feature At A Time
+
+Full-file Replacement Only
 
 No Refactoring
 
@@ -115,13 +125,7 @@ Commit
 
 ---
 
-# Next Features
-
-FEATURE-014
-
-Morning Brief Upgrade
-
-↓
+# Future Features
 
 FEATURE-015
 
