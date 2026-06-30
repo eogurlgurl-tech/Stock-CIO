@@ -1,14 +1,13 @@
 """
 Stock-CIO
 
-Entry Point
+Application Entry Point
 """
 
-from core.cio_engine import CIOEngine
+from src.core.cio_engine import CIOEngine
 
 
 def main() -> int:
-    """Application entry point."""
 
     engine = CIOEngine()
     engine.start()

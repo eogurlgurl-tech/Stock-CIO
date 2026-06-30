@@ -1,75 +1,33 @@
 """
-Decision Engine
+Configuration Manager
 
 Stock-CIO
 """
 
-from src.config.config_manager import ConfigManager
-from src.models.cio_decision import CIODecision
-from src.models.score import Score
+from pathlib import Path
+
+import yaml
 
 
-class DecisionEngine:
-    """Score를 투자 의사결정으로 변환"""
+class ConfigManager:
+    """YAML Configuration Loader"""
 
-    def __init__(self):
+    def __init__(self) -> None:
 
-        config = ConfigManager().load("strategy")
+        self.config_dir = (
+            Path(__file__).resolve().parents[2] / "10_CONFIG"
+        )
 
-        self.strategy = config["decision"]
-        self.portfolio = config["portfolio"]
+    def load(self, name: str) -> dict:
 
-    def make_decision(self, score: Score) -> CIODecision:
+        file_path = self.config_dir / f"{name}.yaml"
 
-        decision = CIODecision()
-
-        total = score.total
-
-        if total >= self.strategy["strong_buy"]:
-
-            decision.market_status = "BULLISH"
-            decision.action = "STRONG BUY"
-
-            decision.cash_ratio = 100 - self.portfolio["max_position"]
-            decision.stock_ratio = self.portfolio["max_position"]
-
-        elif total >= self.strategy["buy"]:
-
-            decision.market_status = "BULLISH"
-            decision.action = "BUY"
-
-            decision.cash_ratio = 100 - (
-                self.portfolio["initial_position"]
-                + self.portfolio["add_position"]
+        if not file_path.exists():
+            raise FileNotFoundError(
+                f"Configuration file not found: {file_path}"
             )
 
-            decision.stock_ratio = (
-                self.portfolio["initial_position"]
-                + self.portfolio["add_position"]
-            )
+        with open(file_path, "r", encoding="utf-8") as f:
+            data = yaml.safe_load(f)
 
-        elif total >= self.strategy["watch"]:
-
-            decision.market_status = "NEUTRAL"
-            decision.action = "HOLD"
-
-            decision.cash_ratio = 50
-            decision.stock_ratio = 50
-
-        elif total >= self.strategy["reduce"]:
-
-            decision.market_status = "CAUTION"
-            decision.action = "REDUCE"
-
-            decision.cash_ratio = 70
-            decision.stock_ratio = 30
-
-        else:
-
-            decision.market_status = "BEARISH"
-            decision.action = "SELL"
-
-            decision.cash_ratio = 100
-            decision.stock_ratio = 0
-
-        return decision
+        return data if data else {}

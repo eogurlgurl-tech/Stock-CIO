@@ -1,0 +1,10 @@
+"""
+Investment Action Constants
+"""
+
+STRONG_BUY = "STRONG BUY"
+BUY = "BUY"
+ACCUMULATE = "ACCUMULATE"
+HOLD = "HOLD"
+REDUCE = "REDUCE"
+DEFENSE = "DEFENSE"

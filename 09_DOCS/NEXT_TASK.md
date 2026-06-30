@@ -7,59 +7,111 @@ Last Update : 2026-06-30
 
 ---
 
-# Feature
+# Sprint
 
-FEATURE-011
-
-Decision Engine Upgrade
+Stabilization Sprint
 
 ---
 
-# Status
+# Priority
 
-READY
-
----
-
-# Target File
-
-src/core/decision_engine.py
+P0 (Critical)
 
 ---
 
-# Action
+# Current Task
 
-전체 파일 교체
+Restore
 
----
-
-# Goal
-
-- Summary 자동 생성
-- Risk 자동 생성
-- Watch List 생성
-- Top Sector 생성
-- Decision 로직 고도화
+src/config/config_manager.py
 
 ---
 
-# Required Before Start
+# Build Order
 
-사용자가 현재 decision_engine.py 전체 코드를 공유
+STEP 1
+
+Restore ConfigManager
+
+↓
+
+STEP 2
+
+python main.py
+
+↓
+
+Fix next error
+
+↓
+
+Repeat
+
+↓
+
+STEP 3
+
+Morning Brief Generation
+
+↓
+
+STEP 4
+
+pytest
+
+↓
+
+STEP 5
+
+Release v2.1.0
 
 ---
 
-# Expected Commit
+# Important
 
-feat: upgrade decision engine
+Current project is NOT in feature development.
+
+Current project is in build stabilization.
+
+No feature development until build succeeds.
 
 ---
 
-# Next Feature
+# After Stabilization
 
-FEATURE-012
+FEATURE-013
 
-Stock Screener
+News Analyzer Integration
+
+↓
+
+FEATURE-014
+
+Morning Brief Upgrade
+
+↓
+
+FEATURE-015
+
+Dashboard
+
+↓
+
+FEATURE-016
+
+Backtest
+
+↓
+
+FEATURE-017
+
+Portfolio Optimizer
+
+↓
+
+FEATURE-018
+
+AI CIO
 
 ---
 

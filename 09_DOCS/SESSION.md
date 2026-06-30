@@ -9,31 +9,48 @@ Last Update : 2026-06-30
 
 # Sprint
 
-Sprint 5
+Sprint 6
 
-Status : IN PROGRESS
+Status : STABILIZATION
 
-Progress : 78%
+Progress : 82%
 
 ---
 
 # Current Feature
 
-FEATURE-011
-
-Decision Engine Upgrade
+BUILD STABILIZATION
 
 ---
 
 # Current Task
 
-Waiting for source file
+Restore ConfigManager
+Fix Import
+Run Integration Test
 
 ---
 
 # Current File
 
-src/core/decision_engine.py
+src/config/config_manager.py
+
+---
+
+# Current Issue
+
+config_manager.py was accidentally overwritten by decision_engine.py.
+
+Current error
+
+ImportError:
+cannot import name 'ConfigManager'
+from partially initialized module
+src.config.config_manager
+
+Cause
+
+config_manager.py contains incorrect source code.
 
 ---
 
@@ -54,6 +71,7 @@ src/core/decision_engine.py
 ## Configuration
 
 - weight.yaml Refactoring
+- strategy.yaml 적용
 
 ## Models
 
@@ -61,131 +79,105 @@ src/core/decision_engine.py
 - Score
 - Portfolio
 - CIODecision
+- News
+- StockCandidate
+- SectorCandidate
 
 ## Collectors
 
 - us_loader.py
 - krx_loader.py
 - market_data_loader.py
-- Collector Integration Complete
+- base_collector.py
+- news_collector.py
 
 ## Analyzers
 
-- MacroAnalyzer Refactoring
-- MarketAnalyzer 신규
-- PortfolioAnalyzer 신규
-- ScoreEngine Refactoring
+- MacroAnalyzer
+- MarketAnalyzer
+- PortfolioAnalyzer
+- NewsAnalyzer
+- StockScreener
+- ScoreEngine
 
 ## Core
 
-- CIOEngine Integration
-- DecisionEngine (Basic Version)
+- CIOEngine
+- DecisionEngine
 
 ## Reports
 
-- MorningBrief Integration
+- MorningBrief
+
+## Tests
+
+- tests 폴더 생성
+- test_macro_analyzer.py
+- test_market_analyzer.py
+- test_score_engine.py
+- test_stock_screener.py
+- test_decision_engine.py
 
 ---
 
-# Next Task
+# Current Goal
 
-Feature
+Do NOT add new features.
 
-FEATURE-011
+Restore build.
 
-Target File
+Target
 
-src/core/decision_engine.py
-
-Action
-
-전체 파일 교체
-
-Goal
-
-- Summary 생성
-- Risk 자동 생성
-- Top Sector 추천
-- Watch List 생성
-- CIO Decision 고도화
-
-Expected Commit
-
-feat: upgrade decision engine
-
----
-
-# After Current Task
-
-FEATURE-012
-
-Stock Screener
+python main.py
 
 ↓
 
-FEATURE-013
-
-News Analyzer
+Run without error
 
 ↓
 
-FEATURE-014
-
-Morning Brief Upgrade
+Generate Morning Brief
 
 ↓
 
-FEATURE-015
-
-Dashboard
+pytest PASS
 
 ↓
 
-FEATURE-016
-
-Backtest
-
----
-
-# Project Progress
-
-Architecture : 95%
-
-Documentation : 100%
-
-Configuration : 100%
-
-Models : 100%
-
-Collectors : 100%
-
-Analyzers : 85%
-
-Core Engine : 85%
-
-Reports : 50%
-
-Dashboard : 0%
-
-Backtest : 0%
-
-Overall : 78%
+Release v2.1.0
 
 ---
 
 # Working Rules
 
-## Development Rules
+No new feature
 
-1. Feature 단위로 개발한다.
-2. 관련 파일을 먼저 확인한다.
-3. 전체 파일 교체만 수행한다.
-4. 부분 코드 수정(Snippet) 금지
-5. Config First
-6. Clean Architecture 유지
-7. SOLID 원칙 준수
-8. Commit 후 SESSION.md / NEXT_TASK.md 업데이트
+Fix one error at a time
+
+Run
+
+python main.py
+
+after every fix
+
+Run pytest before Commit
+
+Only full-file replacement
+
+Maintain Clean Architecture
+
+Commit only after build succeeds
 
 ---
 
-# End of Session
+# Expected Commit
+
+fix: restore config manager
+
+fix: stabilize imports
+
+fix: integration build
+
+test: add integration tests
+
+release: v2.1.0

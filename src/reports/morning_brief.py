@@ -7,9 +7,9 @@ Stock-CIO
 from datetime import datetime
 from pathlib import Path
 
-from models.market_snapshot import MarketSnapshot
-from models.score import Score
-from models.cio_decision import CIODecision
+from src.models.market_snapshot import MarketSnapshot
+from src.models.score import Score
+from src.models.cio_decision import CIODecision
 
 
 class MorningBrief:
