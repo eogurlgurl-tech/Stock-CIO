@@ -1,7 +1,7 @@
 
 # STOCK-CIO Next Task
 
-Version : v2.1.0
+Version : v2.2.0-alpha
 
 Last Update : 2026-06-30
 
@@ -9,81 +9,113 @@ Last Update : 2026-06-30
 
 # Sprint
 
-Stabilization Sprint
+Sprint 7
 
 ---
 
-# Priority
-
-P0 (Critical)
-
----
-
-# Current Task
-
-Restore
-
-src/config/config_manager.py
-
----
-
-# Build Order
-
-STEP 1
-
-Restore ConfigManager
-
-↓
-
-STEP 2
-
-python main.py
-
-↓
-
-Fix next error
-
-↓
-
-Repeat
-
-↓
-
-STEP 3
-
-Morning Brief Generation
-
-↓
-
-STEP 4
-
-pytest
-
-↓
-
-STEP 5
-
-Release v2.1.0
-
----
-
-# Important
-
-Current project is NOT in feature development.
-
-Current project is in build stabilization.
-
-No feature development until build succeeds.
-
----
-
-# After Stabilization
+# Feature
 
 FEATURE-013
 
 News Analyzer Integration
 
+---
+
+# Goal
+
+Generate News Score
+
+Reflect News Score to CIO Score
+
+Generate News Section in Morning Brief
+
+---
+
+# Development Order
+
+STEP 1
+
+Review NewsCollector
+
 ↓
+
+STEP 2
+
+Implement NewsAnalyzer
+
+↓
+
+STEP 3
+
+Connect ScoreEngine
+
+↓
+
+STEP 4
+
+Connect DecisionEngine
+
+↓
+
+STEP 5
+
+Update Morning Brief
+
+↓
+
+STEP 6
+
+Unit Test
+
+↓
+
+STEP 7
+
+Integration Test
+
+↓
+
+Commit
+
+---
+
+# Working Rules
+
+Feature Development Only
+
+One Feature At A Time
+
+No Refactoring
+
+No Architecture Change
+
+Build Must Stay Green
+
+---
+
+# Build Verification
+
+python main.py
+
+↓
+
+PASS
+
+↓
+
+python -m pytest
+
+↓
+
+PASS
+
+↓
+
+Commit
+
+---
+
+# Next Features
 
 FEATURE-014
 
@@ -112,7 +144,3 @@ Portfolio Optimizer
 FEATURE-018
 
 AI CIO
-
----
-
-# End

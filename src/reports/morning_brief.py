@@ -10,6 +10,7 @@ from pathlib import Path
 from src.models.market_snapshot import MarketSnapshot
 from src.models.score import Score
 from src.models.cio_decision import CIODecision
+from src.models.news import News
 
 
 class MorningBrief:
@@ -20,6 +21,7 @@ class MorningBrief:
         market: MarketSnapshot,
         score: Score,
         decision: CIODecision,
+        news_list: list[News],
     ) -> Path:
 
         today = datetime.now().strftime("%Y-%m-%d")
@@ -28,6 +30,21 @@ class MorningBrief:
         report_dir.mkdir(parents=True, exist_ok=True)
 
         report_path = report_dir / f"{today}.md"
+
+        # -------------------------
+        # News Section
+        # -------------------------
+
+        if news_list:
+
+            headlines = "\n".join(
+                f"- {news.title}"
+                for news in news_list[:5]
+            )
+
+        else:
+
+            headlines = "- No news available."
 
         report = f"""# 📈 STOCK-CIO Morning Brief
 
@@ -58,16 +75,17 @@ class MorningBrief:
 
 | 항목 | 점수 |
 |------|------:|
-| Macro | {score.macro} |
-| Sector | {score.sector} |
-| Money Flow | {score.money_flow} |
-| News | {score.news} |
-| Portfolio | {score.portfolio} |
-| Risk | {score.risk} |
+| Macro | {score.macro:.2f} |
+| Market | {score.market:.2f} |
+| Sector | {score.sector:.2f} |
+| Money Flow | {score.money_flow:.2f} |
+| News | {score.news:.2f} |
+| Portfolio | {score.portfolio:.2f} |
+| Risk | {score.risk:.2f} |
 
 ### TOTAL SCORE
 
-**{score.total}**
+**{score.total:.2f}**
 
 ### GRADE
 
@@ -104,7 +122,13 @@ class MorningBrief:
 
 # 📰 Today's News
 
-- 준비중
+### News Score
+
+**{score.news:.2f}**
+
+### Top Headlines
+
+{headlines}
 
 ---
 

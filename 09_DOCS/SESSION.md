@@ -1,7 +1,7 @@
 
 # STOCK-CIO Session
 
-Version : v2.1.0
+Version : v2.1.0 Stable
 
 Last Update : 2026-06-30
 
@@ -9,175 +9,112 @@ Last Update : 2026-06-30
 
 # Sprint
 
-Sprint 6
+Sprint 7
 
-Status : STABILIZATION
+Status : READY
 
-Progress : 82%
+Progress : 0%
+
+---
+
+# Current Status
+
+Stable Build
+
+---
+
+# Current Version
+
+v2.1.0 Stable
+
+---
+
+# Verified
+
+✅ python main.py PASS
+
+✅ Morning Brief PASS
+
+✅ 26 Tests PASS
+
+✅ Git Commit Completed
+
+---
+
+# Current Architecture
+
+Model
+
+↓
+
+Collector
+
+↓
+
+Analyzer
+
+↓
+
+Engine
+
+↓
+
+Report
+
+↓
+
+Test
 
 ---
 
 # Current Feature
 
-BUILD STABILIZATION
+FEATURE-013
+
+News Analyzer Integration
 
 ---
 
 # Current Task
 
-Restore ConfigManager
-Fix Import
-Run Integration Test
-
----
-
-# Current File
-
-src/config/config_manager.py
-
----
-
-# Current Issue
-
-config_manager.py was accidentally overwritten by decision_engine.py.
-
-Current error
-
-ImportError:
-cannot import name 'ConfigManager'
-from partially initialized module
-src.config.config_manager
-
-Cause
-
-config_manager.py contains incorrect source code.
-
----
-
-# Last Completed
-
-## Documentation
-
-- README.md
-- PROJECT_CONTEXT.md
-- PROJECT_STATUS.md
-- Architecture.md
-- DataFlow.md
-- API.md
-- Roadmap.md
-- CHANGELOG.md
-- Version.md
-
-## Configuration
-
-- weight.yaml Refactoring
-- strategy.yaml 적용
-
-## Models
-
-- MarketSnapshot
-- Score
-- Portfolio
-- CIODecision
-- News
-- StockCandidate
-- SectorCandidate
-
-## Collectors
-
-- us_loader.py
-- krx_loader.py
-- market_data_loader.py
-- base_collector.py
-- news_collector.py
-
-## Analyzers
-
-- MacroAnalyzer
-- MarketAnalyzer
-- PortfolioAnalyzer
-- NewsAnalyzer
-- StockScreener
-- ScoreEngine
-
-## Core
-
-- CIOEngine
-- DecisionEngine
-
-## Reports
-
-- MorningBrief
-
-## Tests
-
-- tests 폴더 생성
-- test_macro_analyzer.py
-- test_market_analyzer.py
-- test_score_engine.py
-- test_stock_screener.py
-- test_decision_engine.py
-
----
-
-# Current Goal
-
-Do NOT add new features.
-
-Restore build.
-
-Target
-
-python main.py
+Review NewsCollector
 
 ↓
 
-Run without error
+Implement NewsAnalyzer
 
 ↓
 
-Generate Morning Brief
+Connect ScoreEngine
 
 ↓
 
-pytest PASS
+Update Morning Brief
 
 ↓
 
-Release v2.1.0
+Unit Test
+
+↓
+
+Integration Test
 
 ---
 
 # Working Rules
 
-No new feature
+Feature Development
 
-Fix one error at a time
+One Feature At A Time
 
-Run
+Full File Replacement Only
 
-python main.py
+python main.py after Integration
 
-after every fix
-
-Run pytest before Commit
-
-Only full-file replacement
-
-Maintain Clean Architecture
-
-Commit only after build succeeds
+python -m pytest before Commit
 
 ---
 
-# Expected Commit
+# Release Target
 
-fix: restore config manager
-
-fix: stabilize imports
-
-fix: integration build
-
-test: add integration tests
-
-release: v2.1.0
+v2.2.0-alpha

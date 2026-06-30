@@ -8,43 +8,56 @@ from src.models.news import News
 
 
 class NewsAnalyzer:
-    """뉴스 데이터를 분석하여 News Score 생성"""
+    """뉴스 데이터를 분석하여 News Score를 계산"""
 
-    def analyze(self, news: list[News]) -> float:
+    DEFAULT_SCORE = 50.0
+
+    MIN_SCORE = 0.0
+
+    MAX_SCORE = 100.0
+
+    def analyze(self, news_list: list[News]) -> float:
         """
-        News Score 계산
+        뉴스 리스트를 분석하여 0~100 점수 반환
+
+        Parameters
+        ----------
+        news_list : list[News]
 
         Returns
         -------
         float
-            0 ~ 100
         """
 
-        if not news:
-            return 50.0
+        if not news_list:
+            return self.DEFAULT_SCORE
 
-        score = 50.0
+        total_weight = 0.0
+        weighted_score = 0.0
 
-        # ==========================================================
-        # Importance Score
-        # ==========================================================
+        for news in news_list:
 
-        importance = sum(item.importance for item in news)
+            weight = max(news.importance, 1)
 
-        score += importance * 2
+            # sentiment
+            # -1.0 ~ +1.0
+            sentiment = max(min(news.sentiment, 1.0), -1.0)
 
-        # ==========================================================
-        # Sentiment Score
-        # ==========================================================
+            score = 50.0 + (sentiment * 50.0)
 
-        sentiment = sum(item.sentiment for item in news)
+            weighted_score += score * weight
+            total_weight += weight
 
-        score += sentiment * 10
+        result = weighted_score / total_weight
 
-        # ==========================================================
-        # Normalize
-        # ==========================================================
+        return round(self._clamp(result), 2)
 
-        score = max(0.0, min(100.0, score))
+    def _clamp(self, value: float) -> float:
 
-        return round(score, 2)
+        if value < self.MIN_SCORE:
+            return self.MIN_SCORE
+
+        if value > self.MAX_SCORE:
+            return self.MAX_SCORE
+
+        return value

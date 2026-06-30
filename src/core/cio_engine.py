@@ -10,6 +10,8 @@ from src.analyzers.macro_analyzer import MacroAnalyzer
 from src.analyzers.market_analyzer import MarketAnalyzer
 from src.analyzers.score_engine import ScoreEngine
 from src.collectors.market_data_loader import MarketDataLoader
+from src.collectors.news_collector import NewsCollector
+from src.analyzers.news_analyzer import NewsAnalyzer
 from src.core.decision_engine import DecisionEngine
 from src.reports.morning_brief import MorningBrief
 from src.utils.logger import Logger
@@ -31,6 +33,8 @@ class CIOEngine:
 
         self.macro_analyzer = MacroAnalyzer()
         self.market_analyzer = MarketAnalyzer()
+        self.news_collector = NewsCollector()
+        self.news_analyzer = NewsAnalyzer()
 
         self.score_engine = ScoreEngine()
         self.decision_engine = DecisionEngine()
@@ -75,6 +79,11 @@ class CIOEngine:
         macro_score = self.macro_analyzer.analyze(market)
         market_score = self.market_analyzer.analyze(market)
 
+        news_list = self.news_collector.collect()
+        news_score = self.news_analyzer.analyze(news_list)
+
+        self.context["news"] = news_list
+
         # -------------------------
         # Score
         # -------------------------
@@ -82,6 +91,7 @@ class CIOEngine:
         score = self.score_engine.calculate(
             macro=macro_score,
             market=market_score,
+            news=news_score,
         )
 
         self.context["score"] = score
@@ -135,6 +145,7 @@ class CIOEngine:
             self.context["market"],
             self.context["score"],
             self.context["decision"],
+            self.context["news"],
         )
 
         self.context["report"] = report
