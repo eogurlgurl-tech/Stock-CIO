@@ -1,5 +1,5 @@
 """
-Yahoo Market Loader
+US Market Loader
 
 Stock-CIO
 """
@@ -8,53 +8,70 @@ from datetime import datetime
 
 import yfinance as yf
 
-from models.market_snapshot import MarketSnapshot
+from src.collectors.base_loader import BaseLoader
+from src.models.market_snapshot import MarketSnapshot
 
 
-class YahooLoader:
-    """Yahoo Finance 통합 시장 데이터"""
+class YahooLoader(BaseLoader):
+    """미국 시장 데이터 로더"""
 
     SYMBOLS = {
-        "kospi": "^KS11",
-        "kosdaq": "^KQ11",
+        "dow": "^DJI",
         "sp500": "^GSPC",
         "nasdaq": "^IXIC",
-        "vix": "^VIX",
         "sox": "^SOX",
+        "vix": "^VIX",
     }
 
-    def _price(self, symbol: str) -> float:
+    def _market_data(self, symbol: str) -> tuple[float, float]:
+        """현재가와 전일 대비 등락률 조회"""
 
         try:
 
             df = yf.Ticker(symbol).history(period="5d")
 
-            return float(df["Close"].iloc[-1])
+            if not self.has_enough_data(df):
+                return 0.0, 0.0
+
+            today = float(df["Close"].iloc[-1])
+            yesterday = float(df["Close"].iloc[-2])
+
+            price = self.safe_round(today)
+            change = self.calculate_change(today, yesterday)
+
+            return price, change
 
         except Exception as e:
 
             print(f"Yahoo Loader Error ({symbol}) : {e}")
 
-            return 0.0
+            return 0.0, 0.0
 
     def load(self) -> MarketSnapshot:
+        """미국 시장 데이터 조회"""
+
+        dow, dow_change = self._market_data(self.SYMBOLS["dow"])
+        sp500, sp500_change = self._market_data(self.SYMBOLS["sp500"])
+        nasdaq, nasdaq_change = self._market_data(self.SYMBOLS["nasdaq"])
+        sox, sox_change = self._market_data(self.SYMBOLS["sox"])
+        vix, vix_change = self._market_data(self.SYMBOLS["vix"])
 
         return MarketSnapshot(
-
-            market="GLOBAL",
-
+            market="US",
             timestamp=datetime.now(),
 
-            kospi=self._price("^KS11"),
+            dow=dow,
+            dow_change=dow_change,
 
-            kosdaq=self._price("^KQ11"),
+            sp500=sp500,
+            sp500_change=sp500_change,
 
-            sp500=self._price("^GSPC"),
+            nasdaq=nasdaq,
+            nasdaq_change=nasdaq_change,
 
-            nasdaq=self._price("^IXIC"),
+            sox=sox,
+            sox_change=sox_change,
 
-            vix=self._price("^VIX"),
-
-            sox=self._price("^SOX"),
-
+            vix=vix,
+            vix_change=vix_change,
         )

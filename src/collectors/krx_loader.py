@@ -4,46 +4,75 @@ KRX Loader
 Stock-CIO
 """
 
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from pykrx import stock
 
-from models.market_snapshot import MarketSnapshot
+from src.collectors.base_loader import BaseLoader
+from src.models.market_snapshot import MarketSnapshot
 
 
-class KRXLoader:
+class KRXLoader(BaseLoader):
     """한국 시장 데이터 로더"""
 
-    def load(self) -> MarketSnapshot:
-        """KOSPI / KOSDAQ 데이터를 조회"""
+    INDEX = {
+        "kospi": "1001",
+        "kosdaq": "2001",
+    }
 
-        today = datetime.now().strftime("%Y%m%d")
+    def _market_data(self, ticker: str) -> tuple[float, float]:
+        """현재가와 전일 대비 등락률 조회"""
 
         try:
-            kospi = stock.get_index_ohlcv_by_date(
-                fromdate=today,
-                todate=today,
-                ticker="1001",
+
+            today = datetime.now()
+            from_date = (today - timedelta(days=10)).strftime("%Y%m%d")
+            to_date = today.strftime("%Y%m%d")
+
+            df = stock.get_index_ohlcv_by_date(
+                fromdate=from_date,
+                todate=to_date,
+                ticker=ticker,
             )
 
-            kosdaq = stock.get_index_ohlcv_by_date(
-                fromdate=today,
-                todate=today,
-                ticker="2001",
+            if not self.has_enough_data(df):
+                return 0.0, 0.0
+
+            today_close = float(df["종가"].iloc[-1])
+            yesterday_close = float(df["종가"].iloc[-2])
+
+            price = self.safe_round(today_close)
+            change = self.calculate_change(
+                today_close,
+                yesterday_close,
             )
 
-            kospi_close = float(kospi["종가"].iloc[-1])
-            kosdaq_close = float(kosdaq["종가"].iloc[-1])
+            return price, change
 
-        except Exception:
+        except Exception as e:
 
-            # 휴장일 또는 장 시작 전 등 조회 실패 시
-            kospi_close = 0.0
-            kosdaq_close = 0.0
+            print(f"KRX Loader Error ({ticker}) : {e}")
+
+            return 0.0, 0.0
+
+    def load(self) -> MarketSnapshot:
+        """한국 시장 데이터 조회"""
+
+        kospi, kospi_change = self._market_data(
+            self.INDEX["kospi"]
+        )
+
+        kosdaq, kosdaq_change = self._market_data(
+            self.INDEX["kosdaq"]
+        )
 
         return MarketSnapshot(
             market="KRX",
             timestamp=datetime.now(),
-            kospi=kospi_close,
-            kosdaq=kosdaq_close,
+
+            kospi=kospi,
+            kospi_change=kospi_change,
+
+            kosdaq=kosdaq,
+            kosdaq_change=kosdaq_change,
         )
