@@ -1,7 +1,7 @@
 
 # STOCK-CIO Session
 
-Version : v2.0.0
+Version : v2.1.0
 
 Last Update : 2026-06-30
 
@@ -11,17 +11,17 @@ Last Update : 2026-06-30
 
 Sprint 5
 
-Status : READY
+Status : IN PROGRESS
 
-Progress : 40%
+Progress : 78%
 
 ---
 
 # Current Feature
 
-FEATURE-003
+FEATURE-011
 
-US Market Loader Enhancement
+Decision Engine Upgrade
 
 ---
 
@@ -33,7 +33,7 @@ Waiting for source file
 
 # Current File
 
-src/collectors/us_loader.py
+src/core/decision_engine.py
 
 ---
 
@@ -53,21 +53,37 @@ src/collectors/us_loader.py
 
 ## Configuration
 
-- weight.yaml
-- strategy.yaml
+- weight.yaml Refactoring
 
-## Engine
+## Models
 
+- MarketSnapshot
+- Score
+- Portfolio
+- CIODecision
+
+## Collectors
+
+- us_loader.py
+- krx_loader.py
+- market_data_loader.py
+- Collector Integration Complete
+
+## Analyzers
+
+- MacroAnalyzer Refactoring
+- MarketAnalyzer 신규
+- PortfolioAnalyzer 신규
 - ScoreEngine Refactoring
-- DecisionEngine YAML Integration
 
-## Model
+## Core
 
-- MarketSnapshot Model Expansion
+- CIOEngine Integration
+- DecisionEngine (Basic Version)
 
-## Refactoring
+## Reports
 
-- Project Import Standardization
+- MorningBrief Integration
 
 ---
 
@@ -75,11 +91,11 @@ src/collectors/us_loader.py
 
 Feature
 
-FEATURE-003
+FEATURE-011
 
 Target File
 
-src/collectors/us_loader.py
+src/core/decision_engine.py
 
 Action
 
@@ -87,60 +103,65 @@ Action
 
 Goal
 
-- nasdaq_change 추가
-- sp500_change 추가
-- sox_change 추가
-- vix_change 추가
-
-Current Status
-
-사용자가 us_loader.py 전체 코드를 공유하면 작업 시작
+- Summary 생성
+- Risk 자동 생성
+- Top Sector 추천
+- Watch List 생성
+- CIO Decision 고도화
 
 Expected Commit
 
-feat: add US market change data
+feat: upgrade decision engine
 
 ---
 
 # After Current Task
 
-FEATURE-004
+FEATURE-012
 
-KRX Loader Enhancement
-
-↓
-
-FEATURE-005
-
-Macro Analyzer Refactoring
+Stock Screener
 
 ↓
 
-FEATURE-006
+FEATURE-013
 
-Decision Engine Enhancement
+News Analyzer
 
 ↓
 
-FEATURE-007
+FEATURE-014
 
-CIO Engine Refactoring
+Morning Brief Upgrade
+
+↓
+
+FEATURE-015
+
+Dashboard
+
+↓
+
+FEATURE-016
+
+Backtest
 
 ---
 
 # Project Progress
 
+Architecture : 95%
+
 Documentation : 100%
 
 Configuration : 100%
 
-Collectors : 60%
+Models : 100%
 
-Models : 80%
+Collectors : 100%
 
-Analyzers : 35%
+Analyzers : 85%
 
-Engines : 30%
+Core Engine : 85%
 
 Reports : 50%
 
@@ -148,73 +169,22 @@ Dashboard : 0%
 
 Backtest : 0%
 
+Overall : 78%
+
 ---
 
 # Working Rules
 
 ## Development Rules
 
-1. 한 번에 하나의 작업만 수행한다.
-2. 현재 작업이 끝나기 전에는 다른 작업으로 이동하지 않는다.
-3. 새로운 기능 개발 전 반드시 영향받는 파일을 확인한다.
-4. 기존 파일을 먼저 검토한 후 전체 파일 교체 방식으로 수정한다.
-5. 부분 코드(Snippet) 수정은 사용하지 않는다.
-6. 모든 설정값은 YAML에서 관리한다.
-7. Commit 후 SESSION.md와 NEXT_TASK.md를 반드시 업데이트한다.
-
----
-
-## Response Rules
-
-모든 작업은 아래 형식을 따른다.
-
-[FEATURE-XXX]
-
-파일
-
-작업
-
-영향 파일
-
-전체 교체
-
-Commit
-
-SESSION.md 업데이트
-
-NEXT_TASK.md 업데이트
-
----
-
-## New Chat Rules
-
-새로운 채팅에서는 아래 순서를 따른다.
-
-"STOCK-CIO 이어서 진행"
-
-입력
-
-SESSION.md 전체 붙여넣기
-
-NEXT_TASK.md 전체 붙여넣기
-
-현재 작업부터 바로 시작
-
-별도의 프로젝트 설명은 하지 않는다.
-
----
-
-## Project Principles
-
-- Clean Architecture 유지
-- SOLID 원칙 준수
-- 확장 가능한 구조 우선
-- 임시 코드 작성 금지
-- Hard Coding 최소화
-- Documentation First
-- Config First
-- Testable Code
-- AI와 사람이 모두 이해할 수 있는 구조 유지
+1. Feature 단위로 개발한다.
+2. 관련 파일을 먼저 확인한다.
+3. 전체 파일 교체만 수행한다.
+4. 부분 코드 수정(Snippet) 금지
+5. Config First
+6. Clean Architecture 유지
+7. SOLID 원칙 준수
+8. Commit 후 SESSION.md / NEXT_TASK.md 업데이트
 
 ---
 

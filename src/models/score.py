@@ -7,55 +7,26 @@ Stock-CIO
 from dataclasses import dataclass
 
 
-@dataclass
+@dataclass(slots=True)
 class Score:
+    """CIO Score Model"""
 
-    macro: int = 0
-    sector: int = 0
-    money_flow: int = 0
-    news: int = 0
-    portfolio: int = 0
-    risk: int = 0
+    # ==========================
+    # Analyzer Scores
+    # ==========================
 
-    @property
-    def total(self) -> int:
-        """최종 CIO Score"""
+    macro: float = 0.0
+    market: float = 0.0
+    sector: float = 0.0
+    money_flow: float = 0.0
+    news: float = 0.0
+    portfolio: float = 0.0
+    risk: float = 0.0
 
-        return (
-            self.macro
-            + self.sector
-            + self.money_flow
-            + self.news
-            + self.portfolio
-            - self.risk
-        )
+    # ==========================
+    # Final Result
+    # ==========================
 
-    @property
-    def grade(self) -> str:
-        """투자 등급"""
-
-        if self.total >= 90:
-            return "S"
-        elif self.total >= 80:
-            return "A"
-        elif self.total >= 70:
-            return "B"
-        elif self.total >= 60:
-            return "C"
-        else:
-            return "D"
-
-    @property
-    def stars(self) -> str:
-        """별점"""
-
-        if self.total >= 90:
-            return "★★★★★"
-        elif self.total >= 80:
-            return "★★★★☆"
-        elif self.total >= 70:
-            return "★★★☆☆"
-        elif self.total >= 60:
-            return "★★☆☆☆"
-        else:
-            return "★☆☆☆☆"
+    total: float = 0.0
+    grade: str = ""
+    stars: str = ""

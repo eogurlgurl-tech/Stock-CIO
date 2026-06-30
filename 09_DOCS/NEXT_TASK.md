@@ -1,6 +1,7 @@
+
 # STOCK-CIO Next Task
 
-Version : v1.0.0
+Version : v2.1.0
 
 Last Update : 2026-06-30
 
@@ -8,9 +9,9 @@ Last Update : 2026-06-30
 
 # Feature
 
-FEATURE-003
+FEATURE-011
 
-US Market Loader Enhancement
+Decision Engine Upgrade
 
 ---
 
@@ -22,7 +23,7 @@ READY
 
 # Target File
 
-src/collectors/us_loader.py
+src/core/decision_engine.py
 
 ---
 
@@ -34,30 +35,31 @@ src/collectors/us_loader.py
 
 # Goal
 
-- nasdaq_change 추가
-- sp500_change 추가
-- sox_change 추가
-- vix_change 추가
+- Summary 자동 생성
+- Risk 자동 생성
+- Watch List 생성
+- Top Sector 생성
+- Decision 로직 고도화
 
 ---
 
 # Required Before Start
 
-사용자가 현재 us_loader.py 전체 내용을 공유
+사용자가 현재 decision_engine.py 전체 코드를 공유
 
 ---
 
 # Expected Commit
 
-feat: add US market change data
+feat: upgrade decision engine
 
 ---
 
 # Next Feature
 
-FEATURE-004
+FEATURE-012
 
-KRX Loader Enhancement
+Stock Screener
 
 ---
 

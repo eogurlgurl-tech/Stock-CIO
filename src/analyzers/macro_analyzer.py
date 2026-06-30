@@ -4,65 +4,99 @@ Macro Analyzer
 Stock-CIO
 """
 
-from models.market_snapshot import MarketSnapshot
+from src.models.market_snapshot import MarketSnapshot
 
 
 class MacroAnalyzer:
     """거시경제 분석"""
 
-    def analyze(self, market: MarketSnapshot) -> int:
+    def analyze(self, market: MarketSnapshot) -> float:
         """
         Macro Score 계산
 
-        최대 30점
+        Returns
+        -------
+        float
+            0 ~ 100
         """
 
-        score = 0
+        score = 0.0
 
         # ==========================
-        # NASDAQ (0 ~ 10)
+        # NASDAQ (30)
         # ==========================
 
-        if market.nasdaq >= 25000:
-            score += 10
-        elif market.nasdaq >= 24000:
-            score += 8
-        elif market.nasdaq >= 23000:
-            score += 6
-        elif market.nasdaq >= 22000:
-            score += 4
-        else:
-            score += 2
+        score += self._score_change(market.nasdaq_change)
 
         # ==========================
-        # S&P500 (0 ~ 10)
+        # S&P500 (30)
         # ==========================
 
-        if market.sp500 >= 7000:
-            score += 10
-        elif market.sp500 >= 6500:
-            score += 8
-        elif market.sp500 >= 6000:
-            score += 6
-        elif market.sp500 >= 5500:
-            score += 4
-        else:
-            score += 2
+        score += self._score_change(market.sp500_change)
 
         # ==========================
-        # VIX (0 ~ 10)
+        # SOX (20)
+        # ==========================
+
+        score += self._score_change(
+            market.sox_change,
+            weight=20,
+        )
+
+        # ==========================
+        # VIX (20)
         # 낮을수록 좋음
         # ==========================
 
-        if market.vix <= 15:
-            score += 10
-        elif market.vix <= 18:
-            score += 8
-        elif market.vix <= 20:
-            score += 6
-        elif market.vix <= 25:
-            score += 4
-        else:
-            score += 2
+        score += self._score_vix(market.vix_change)
 
-        return score
+        return round(score, 2)
+
+    # ======================================================
+
+    @staticmethod
+    def _score_change(
+        change: float | None,
+        weight: float = 30,
+    ) -> float:
+
+        if change is None:
+            return weight * 0.5
+
+        if change >= 2:
+            return weight
+
+        if change >= 1:
+            return weight * 0.8
+
+        if change >= 0:
+            return weight * 0.6
+
+        if change >= -1:
+            return weight * 0.4
+
+        return weight * 0.2
+
+    # ======================================================
+
+    @staticmethod
+    def _score_vix(change: float | None) -> float:
+
+        weight = 20
+
+        if change is None:
+            return weight * 0.5
+
+        if change <= -5:
+            return weight
+
+        if change <= -2:
+            return weight * 0.8
+
+        if change <= 0:
+            return weight * 0.6
+
+        if change <= 5:
+            return weight * 0.4
+
+        return weight * 0.2
