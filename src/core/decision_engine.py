@@ -4,6 +4,7 @@ Decision Engine
 Stock-CIO
 """
 
+from src.analyzers.stock_screener import StockScreener
 from src.models.cio_decision import CIODecision
 from src.models.score import Score
 
@@ -11,14 +12,20 @@ from src.models.score import Score
 class DecisionEngine:
     """Score를 CIO 투자 의사결정으로 변환"""
 
+    def __init__(self):
+
+        self.screener = StockScreener()
+
     def make_decision(self, score: Score) -> CIODecision:
 
         decision = CIODecision()
 
+        screen = self.screener.screen(score)
+
         total = score.total
 
         # ==========================================================
-        # Market Status / Action / Portfolio Allocation
+        # Market Status
         # ==========================================================
 
         if total >= 90:
@@ -70,7 +77,7 @@ class DecisionEngine:
             decision.stock_ratio = 20
 
         # ==========================================================
-        # Risk Analysis
+        # Risk
         # ==========================================================
 
         if score.risk >= 70:
@@ -92,66 +99,11 @@ class DecisionEngine:
             decision.risks.append("No Significant Risk")
 
         # ==========================================================
-        # Recommended Sectors
-        # (Temporary - FEATURE-012에서 자동화 예정)
+        # Stock Screener
         # ==========================================================
 
-        if total >= 80:
-
-            decision.top_sectors = [
-                "AI",
-                "Semiconductor",
-                "Power Infrastructure",
-                "Defense",
-            ]
-
-        elif total >= 60:
-
-            decision.top_sectors = [
-                "Semiconductor",
-                "IT",
-                "Healthcare",
-                "Internet",
-            ]
-
-        else:
-
-            decision.top_sectors = [
-                "Utilities",
-                "Dividend",
-                "Consumer Staples",
-                "Cash Equivalent",
-            ]
-
-        # ==========================================================
-        # Watch List
-        # (Temporary - FEATURE-012에서 Screener 연동 예정)
-        # ==========================================================
-
-        if total >= 80:
-
-            decision.watch_list = [
-                "Samsung Electronics",
-                "SK Hynix",
-                "ISC",
-                "Leeno Industrial",
-            ]
-
-        elif total >= 60:
-
-            decision.watch_list = [
-                "Samsung Electronics",
-                "LG Energy Solution",
-                "NAVER",
-                "Hyundai Motor",
-            ]
-
-        else:
-
-            decision.watch_list = [
-                "KODEX 200",
-                "TIGER US S&P500",
-            ]
+        decision.top_sectors = screen.top_sectors
+        decision.watch_list = screen.watch_list
 
         # ==========================================================
         # Summary
@@ -159,30 +111,17 @@ class DecisionEngine:
 
         summary = []
 
+        summary.append(f"Overall Score : {total:.2f}")
+        summary.append(f"Market Status : {decision.market_status}")
+        summary.append(f"Recommended Action : {decision.action}")
         summary.append(
-            f"Overall Score : {total:.2f}"
-        )
-
-        summary.append(
-            f"Market Status : {decision.market_status}"
-        )
-
-        summary.append(
-            f"Recommended Action : {decision.action}"
-        )
-
-        summary.append(
-            f"Portfolio Allocation : "
-            f"Stock {decision.stock_ratio}% / "
-            f"Cash {decision.cash_ratio}%"
+            f"Portfolio Allocation : Stock {decision.stock_ratio}% / Cash {decision.cash_ratio}%"
         )
 
         if decision.risks[0] == "No Significant Risk":
             summary.append("Market risk remains manageable.")
         else:
-            summary.append(
-                f"Primary Risk : {decision.risks[0]}"
-            )
+            summary.append(f"Primary Risk : {decision.risks[0]}")
 
         decision.summary = "\n".join(summary)
 
