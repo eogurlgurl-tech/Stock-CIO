@@ -5,31 +5,53 @@ Stock-CIO
 """
 
 from src.models.portfolio import Portfolio
+from src.strategies.allocation_strategy import AllocationStrategy
+from src.strategies.market_value_weight_strategy import (
+    MarketValueWeightStrategy,
+)
 
 
 class PortfolioOptimizer:
     """Portfolio Optimizer"""
 
+    def __init__(
+        self,
+        strategy: AllocationStrategy | None = None,
+    ) -> None:
+        """
+        Portfolio Optimizer
+
+        Parameters
+        ----------
+        strategy : AllocationStrategy, optional
+            Allocation strategy.
+            Defaults to MarketValueWeightStrategy.
+        """
+
+        self._strategy = (
+            strategy
+            if strategy is not None
+            else MarketValueWeightStrategy()
+        )
+
+    @property
+    def strategy(self) -> AllocationStrategy:
+        """Current Allocation Strategy"""
+
+        return self._strategy
+
+    def set_strategy(
+        self,
+        strategy: AllocationStrategy,
+    ) -> None:
+        """Change allocation strategy"""
+
+        self._strategy = strategy
+
     def update_weights(
         self,
         portfolio: Portfolio,
     ) -> Portfolio:
-        """
-        보유 종목 비중 계산
-        """
+        """Apply allocation strategy"""
 
-        total_asset = portfolio.stock_asset
-
-        if total_asset == 0:
-            for position in portfolio.positions:
-                position.weight = 0.0
-
-            return portfolio
-
-        for position in portfolio.positions:
-            position.weight = (
-                position.market_value
-                / total_asset
-            ) * 100
-
-        return portfolio
+        return self._strategy.allocate(portfolio)

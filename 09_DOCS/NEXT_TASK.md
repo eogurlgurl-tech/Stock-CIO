@@ -1,3 +1,201 @@
+# STOCK-CIO Next Task
+
+Version : v0.4.0-alpha
+
+Last Update : 2026-07-03
+
+---
+
+# Current Status
+
+Current Sprint
+
+Sprint 11
+
+Current Feature
+
+FEATURE-019
+
+Risk Analyzer
+
+Build
+
+PASS
+
+Unit Test
+
+92 Passed
+
+Integration Test
+
+Passed
+
+---
+
+# Development Plan
+
+## 019-1 Risk Level
+
+Status
+
+🚧 Next Development
+
+Create
+
+src/constants/risk_level.py
+
+Contents
+
+* LOW
+* MEDIUM
+* HIGH
+* VERY_HIGH
+
+---
+
+## 019-2 Risk Report
+
+Create
+
+src/models/risk_report.py
+
+Contents
+
+* portfolio_score
+* concentration_score
+* diversification_score
+* cash_score
+* largest_weight
+* position_count
+* risk_level
+
+---
+
+## 019-3 Risk Analyzer
+
+Create
+
+src/services/risk_analyzer.py
+
+Responsibilities
+
+* Portfolio Risk Analysis
+* Concentration Analysis
+* Diversification Analysis
+* Cash Ratio Analysis
+* Final Risk Score
+
+---
+
+## 019-4 Unit Test
+
+Create
+
+tests/test_risk_analyzer.py
+
+Verify
+
+* Empty Portfolio
+* Single Position
+* Diversified Portfolio
+* High Concentration
+* High Cash Ratio
+* Low Cash Ratio
+* Risk Level Classification
+
+---
+
+## Expected Result
+
+Build
+
+PASS
+
+Unit Test
+
+92+
+
+Build Status
+
+Green
+
+---
+
+# Development Workflow
+
+Review
+
+↓
+
+Architecture Design
+
+↓
+
+Full-file Replacement
+
+↓
+
+Unit Test
+
+↓
+
+Integration Test
+
+↓
+
+Build Green
+
+↓
+
+Commit
+
+---
+
+# Architecture Rules
+
+Model
+
+↓
+
+Service
+
+↓
+
+Engine
+
+↓
+
+Decision Engine
+
+↓
+
+AI CIO
+
+---
+
+# Long-term Roadmap
+
+FEATURE-019
+
+Risk Analyzer
+
+↓
+
+FEATURE-020
+
+AI Portfolio Recommendation
+
+↓
+
+FEATURE-021
+
+Rebalancing Recommendation
+
+↓
+
+FEATURE-022
+
+AI CIO Decision Engi
 
 # STOCK-CIO Next Task
 
