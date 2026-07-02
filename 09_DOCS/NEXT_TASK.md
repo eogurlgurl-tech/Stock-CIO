@@ -21,65 +21,72 @@ Morning Brief Upgrade
 
 ---
 
+# Current Status
+
+STEP6 Complete
+
+Build Green
+
+31 Tests Passed
+
+---
+
+# Next Task
+
+STEP7
+
+Today's CIO Comment
+
+---
+
 # Goal
 
-Upgrade Morning Brief into a practical CIO Daily Report.
+Complete the final section of Morning Brief.
+
+Generate practical CIO comments based on:
+
+- Score
+- CIO Decision
+
+Return natural Markdown bullet comments instead of a table.
+
+---
+
+# Expected Method
+
+_generate_cio_comment(
+    score,
+    decision,
+)
+
+---
+
+# Output Example
+
+Today's CIO Comment
+
+- Global macro environment remains favorable.
+- Overall investment score remains weak.
+- Maintain defensive allocation.
+- Recommended cash ratio : 80%.
 
 ---
 
 # Development Order
 
-STEP 1
-
-Review MorningBrief
+STEP7
 
 ↓
-
-STEP 2
-
-Global Market Summary
-
-↓
-
-STEP 3
-
-Korea Market Summary
-
-↓
-
-STEP 4
-
-News Summary
-
-↓
-
-STEP 5
-
-Risk Analysis
-
-↓
-
-STEP 6
-
-Watch List
-
-↓
-
-STEP 7
-
-Today's CIO Comment
-
-↓
-
-STEP 8
 
 Unit Test
 
 ↓
 
-STEP 9
-
 Integration Test
+
+↓
+
+Morning Brief Final Review
 
 ↓
 
@@ -93,13 +100,11 @@ Feature Development Only
 
 One Feature At A Time
 
-Full-file Replacement Only
-
-No Refactoring
-
 No Architecture Change
 
 Build Must Stay Green
+
+Review current file before every modification.
 
 ---
 
@@ -111,13 +116,11 @@ python main.py
 
 PASS
 
-↓
-
 python -m pytest
 
 ↓
 
-PASS
+31 Passed
 
 ↓
 
@@ -125,7 +128,7 @@ Commit
 
 ---
 
-# Future Features
+# After FEATURE-014
 
 FEATURE-015
 

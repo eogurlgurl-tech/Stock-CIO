@@ -11,9 +11,9 @@ Last Update : 2026-06-30
 
 Sprint 7
 
-Status : FEATURE-013 COMPLETE
+Status : FEATURE-014 IN PROGRESS
 
-Progress : 20%
+Progress : 90%
 
 ---
 
@@ -36,75 +36,84 @@ v2.2.0-alpha
 - News Model
 - News Collector (Stub)
 - News Analyzer
-- CIOEngine Integration
 - ScoreEngine Integration
+- CIOEngine Integration
 - Morning Brief News Section
 - Unit Test
 
 ---
 
-# Verified
+# FEATURE-014 Progress
 
-✅ python main.py PASS
+Completed
 
-✅ python -m pytest PASS
+✅ STEP1 Review
 
-✅ 31 Tests Passed
+✅ STEP2 Global Market Summary
 
----
+✅ STEP3 Korea Market Summary
 
-# Current Architecture
+✅ STEP4 News Summary
 
-Model
+✅ STEP5 Risk Summary
 
-↓
+✅ STEP6 Watch List
 
-Collector
+Current
 
-↓
+⏳ STEP7 Today's CIO Comment
 
-Analyzer
+Remaining
 
-↓
-
-Engine
-
-↓
-
-Report
-
-↓
-
-Test
+- Unit Test
+- Integration Test
+- Commit
 
 ---
 
-# Completed Feature
+# Current MorningBrief Structure
 
-FEATURE-013
+MorningBrief
 
-News Analyzer Integration
+↓
 
-Status : COMPLETE
+Global Market
 
----
+↓
 
-# Next Feature
+Global Summary
 
-FEATURE-014
+↓
 
-Morning Brief Upgrade
+Korea Market
 
----
+↓
 
-# Development Rules
+Korea Summary
 
-- Feature Development Only
-- One Feature At A Time
-- Full-file Replacement Only
-- No Partial Snippets
-- No Architecture Change
-- Build Must Stay Green
+↓
+
+CIO Score
+
+↓
+
+Today's Decision
+
+↓
+
+Watch List
+
+↓
+
+Risk Summary
+
+↓
+
+News Summary
+
+↓
+
+Top Headlines
 
 ---
 
@@ -112,24 +121,83 @@ Morning Brief Upgrade
 
 python main.py
 
-↓
-
 PASS
 
-↓
-
 python -m pytest
-
-↓
 
 31 Passed
 
 ---
 
+# Development Rules
+
+- Feature Development Only
+- One Feature At A Time
+- Full-file Replacement Preferred
+- When full replacement is difficult, provide exact before/after insertion guide
+- No Partial Snippets without location
+- No Architecture Change
+- Build Must Stay Green
+
+---
+
+# Working Style
+
+Current workflow is fixed.
+
+User pastes the entire source file.
+
+↓
+
+Assistant reviews the current file.
+
+↓
+
+Assistant specifies:
+
+- Find this code
+- Insert below this line
+- Replace this block
+- Expected code after modification
+
+↓
+
+User edits.
+
+↓
+
+Assistant reviews again.
+
+↓
+
+Build
+
+↓
+
+Test
+
+↓
+
+Commit
+
+This workflow proved stable during FEATURE-014.
+
+---
+
 # Notes
 
-Current NewsCollector is Stub implementation.
+Current KRX Loader issue remains independent from FEATURE-014.
 
-News API integration will be implemented in a future feature.
+KRX Login issue will be handled as a separate future Bug Fix.
 
-KRX Loader issue is independent from FEATURE-013 and is not included in this Sprint.
+Current MorningBrief helper methods
+
+- _generate_global_summary()
+- _generate_korea_summary()
+- _generate_news_summary()
+- _generate_risk_summary()
+- _generate_watch_list()
+
+Next helper
+
+- _generate_cio_comment()

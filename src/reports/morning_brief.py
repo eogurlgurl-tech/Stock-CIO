@@ -85,6 +85,138 @@ class MorningBrief:
 | KOSDAQ | {kosdaq} |
 | Overall | {overall} |"""
 
+    def _generate_news_summary(
+        self,
+        news_list: list[News],
+    ) -> str:
+        """News Summary 생성"""
+
+        news_count = len(news_list)
+
+        if news_count == 0:
+            overall = "No News Available"
+        else:
+            overall = "News Data Available"
+
+        return f"""| Item | Status |
+|------|--------|
+| News Count | {news_count} |
+| Overall | {overall} |"""
+
+    def _generate_risk_summary(
+        self,
+        score: Score,
+    ) -> str:
+        """Risk Summary 생성"""
+
+        if score.risk >= 80:
+            overall = "High Risk"
+            recommendation = "Reduce Stock Position"
+
+        elif score.risk >= 50:
+            overall = "Moderate Risk"
+            recommendation = "Maintain Current Position"
+
+        else:
+            overall = "Low Risk"
+            recommendation = "Normal Investment"
+
+        return f"""| Item | Status |
+|------|--------|
+| Risk Score | {score.risk:.2f} |
+| Overall | {overall} |
+| Recommendation | {recommendation} |"""
+
+    def _generate_watch_list(
+        self,
+        score: Score,
+    ) -> str:
+        """Watch List 생성"""
+
+        if score.market >= 70:
+
+            sectors = [
+                ("AI", "Watch"),
+                ("Semiconductor", "Watch"),
+                ("Battery", "Neutral"),
+            ]
+
+        else:
+
+            sectors = [
+                ("Dividend ETF", "Watch"),
+                ("Defense", "Watch"),
+                ("Cash", "Increase"),
+            ]
+
+        rows = "\n".join(
+            f"| {sector} | {status} |"
+            for sector, status in sectors
+        )
+
+        return f"""| Sector | Status |
+|--------|--------|
+{rows}"""
+
+    def _generate_cio_comment(
+        self,
+        score: Score,
+        decision: CIODecision,
+    ) -> str:
+        """Today's CIO Comment 생성"""
+
+        comments = []
+
+        # Macro
+        if score.macro >= 80:
+            comments.append(
+                "- Global macro environment remains favorable."
+            )
+        elif score.macro >= 60:
+            comments.append(
+                "- Macro environment remains stable."
+            )
+        else:
+            comments.append(
+                "- Macro environment remains cautious."
+            )
+
+        # Total Score
+        if score.total >= 80:
+            comments.append(
+                "- Overall investment score is strong."
+            )
+        elif score.total >= 60:
+            comments.append(
+                "- Overall investment score is neutral."
+            )
+        else:
+            comments.append(
+                "- Overall investment score remains weak."
+            )
+
+        # Decision
+        action = decision.action.lower()
+
+        if "buy" in action:
+            comments.append(
+                "- Consider increasing equity exposure."
+            )
+        elif "sell" in action:
+            comments.append(
+                "- Maintain defensive allocation."
+            )
+        else:
+            comments.append(
+                "- Maintain current allocation."
+            )
+
+        comments.append(
+            f"- Recommended cash ratio : {decision.cash_ratio}%."
+        )
+
+        return "\n".join(comments)
+
     def generate(
         self,
         market: MarketSnapshot,
@@ -117,6 +249,13 @@ class MorningBrief:
 
         global_summary = self._generate_global_summary(market)
         korea_summary = self._generate_korea_summary(market)
+        news_summary = self._generate_news_summary(news_list)
+        risk_summary = self._generate_risk_summary(score)
+        watch_list = self._generate_watch_list(score)
+        cio_comment = self._generate_cio_comment(
+            score,
+            decision,
+        )
 
         report = f"""# 📈 STOCK-CIO Morning Brief
 
@@ -186,17 +325,25 @@ class MorningBrief:
 | Cash Ratio | {decision.cash_ratio}% |
 | Stock Ratio | {decision.stock_ratio}% |
 
+### Today's CIO Comment
+
+{cio_comment}
+
 ---
 
 # 👀 Watch List
 
-- 준비중
+### Today's Watch List
+
+{watch_list}
 
 ---
 
 # ⚠ Risk Check
 
-- 준비중
+### Risk Summary
+
+{risk_summary}
 
 ---
 
@@ -205,6 +352,10 @@ class MorningBrief:
 ### News Score
 
 **{score.news:.2f}**
+
+### News Summary
+
+{news_summary}
 
 ### Top Headlines
 
