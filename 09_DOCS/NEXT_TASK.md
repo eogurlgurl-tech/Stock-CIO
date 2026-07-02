@@ -1,92 +1,105 @@
 
 # STOCK-CIO Next Task
 
-Version : v2.2.0-alpha
+Version : v0.4.0-alpha
 
-Last Update : 2026-06-30
+Last Update : 2026-07-02
 
 ---
 
 # Sprint
 
-Sprint 7
+Sprint 9
 
 ---
 
 # Current Feature
 
-FEATURE-014
+FEATURE-017
 
-Morning Brief Upgrade
-
----
-
-# Current Status
-
-STEP6 Complete
-
-Build Green
-
-31 Tests Passed
-
----
-
-# Next Task
-
-STEP7
-
-Today's CIO Comment
+Backtest Engine
 
 ---
 
 # Goal
 
-Complete the final section of Morning Brief.
+Build a reusable backtest engine for strategy validation.
 
-Generate practical CIO comments based on:
+The engine will become the foundation for
 
-- Score
-- CIO Decision
-
-Return natural Markdown bullet comments instead of a table.
-
----
-
-# Expected Method
-
-_generate_cio_comment(
-    score,
-    decision,
-)
-
----
-
-# Output Example
-
-Today's CIO Comment
-
-- Global macro environment remains favorable.
-- Overall investment score remains weak.
-- Maintain defensive allocation.
-- Recommended cash ratio : 80%.
+- Portfolio Optimizer
+- AI CIO
+- Strategy Evaluation
 
 ---
 
 # Development Order
 
-STEP7
+STEP1
+
+Trade Model
 
 ↓
+
+STEP2
+
+Position Model
+
+↓
+
+STEP3
+
+Backtest Engine
+
+↓
+
+STEP4
+
+Performance Analyzer
+
+↓
+
+STEP5
+
+Metrics
+
+- CAGR
+- MDD
+- Win Rate
+- Profit Factor
+- Sharpe Ratio
+
+↓
+
+STEP6
 
 Unit Test
 
 ↓
 
+STEP7
+
 Integration Test
 
 ↓
 
-Morning Brief Final Review
+Commit
+
+---
+
+# Build Verification
+
+python main.py
+
+↓
+
+PASS
+
+python -m pytest
+
+↓
+
+40 Passed
 
 ↓
 
@@ -108,46 +121,22 @@ Review current file before every modification.
 
 ---
 
-# Build Verification
+# Expected Architecture
 
-python main.py
-
-↓
-
-PASS
-
-python -m pytest
+Historical Repository
 
 ↓
 
-31 Passed
+Backtest Engine
 
 ↓
 
-Commit
-
----
-
-# After FEATURE-014
-
-FEATURE-015
-
-Dashboard
+Performance Analyzer
 
 ↓
-
-FEATURE-016
-
-Backtest
-
-↓
-
-FEATURE-017
 
 Portfolio Optimizer
 
 ↓
-
-FEATURE-018
 
 AI CIO

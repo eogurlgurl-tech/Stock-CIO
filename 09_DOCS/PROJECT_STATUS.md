@@ -1,9 +1,9 @@
 
 # STOCK-CIO Project Status
 
-Version : v2.2.0-alpha
+Version : v0.4.0-alpha
 
-Last Update : 2026-06-30
+Last Update : 2026-07-02
 
 ---
 
@@ -15,7 +15,7 @@ AI Chief Investment Officer System
 
 Status : Stable
 
-Current Sprint : Sprint 7
+Current Sprint : Sprint 8
 
 Development Phase : Feature Development
 
@@ -23,68 +23,51 @@ Development Phase : Feature Development
 
 # Sprint Status
 
-Sprint 7
+Sprint 8
 
-Status : IN PROGRESS
+Status : COMPLETED
 
-Progress : 90%
-
----
-
-# Sprint 7 Achievement
-
-✅ FEATURE-013 News Analyzer Integration
-
-Completed
-
-- News Model
-- News Collector (Stub)
-- News Analyzer
-- ScoreEngine Integration
-- CIOEngine Integration
-- Morning Brief News Section
-- Unit Test
-- 31 Tests Passed
+Progress : 100%
 
 ---
 
-# FEATURE-014 Progress
+# Sprint 8 Achievement
+
+✅ FEATURE-016 Historical Data Manager
 
 Completed
 
-- Global Market Summary
-- Korea Market Summary
-- News Summary
-- Risk Summary
-- Watch List
-
-In Progress
-
-- Today's CIO Comment
-
-Pending
-
+- HistoricalPrice Model
+- HistoricalDataLoader
+- CSVStorage
+- HistoricalRepository
+- Repository Pattern
+- Dependency Injection
+- CSV Persistence
 - Unit Test
-- Integration Test
+- Repository Test
+- CSV Storage Test
+- 40 Tests Passed
 
 ---
 
 # Module Status
 
-| Module              | Status | Progress |
-| ------------------- | ------ | -------: |
-| Models              | ✅     |     100% |
-| Collectors          | ✅     |     100% |
-| Macro Analyzer      | ✅     |     100% |
-| Market Analyzer     | ✅     |     100% |
-| News Analyzer       | ✅     |     100% |
-| Score Engine        | ✅     |     100% |
-| Decision Engine     | ✅     |     100% |
-| Stock Screener      | ✅     |     100% |
-| Morning Brief       | ⏳     |      90% |
-| Dashboard           | ⏳     |       0% |
-| Backtest            | ⏳     |       0% |
-| Portfolio Optimizer | ⏳     |       0% |
+| Module                | Status | Progress |
+| --------------------- | ------ | -------: |
+| Models                | ✅     |     100% |
+| Collectors            | ✅     |     100% |
+| Macro Analyzer        | ✅     |     100% |
+| Market Analyzer       | ✅     |     100% |
+| News Analyzer         | ✅     |     100% |
+| Score Engine          | ✅     |     100% |
+| Decision Engine       | ✅     |     100% |
+| Morning Brief         | ✅     |     100% |
+| Dashboard             | ✅     |     100% |
+| Historical Data Layer | ✅     |     100% |
+| Backtest Engine       | ⏳     |       0% |
+| Portfolio Optimizer   | ⏳     |       0% |
+| AI CIO                | ⏳     |       0% |
 
 ---
 
@@ -98,9 +81,13 @@ Morning Brief
 
 PASS
 
-Test
+Dashboard
 
-31 Passed
+PASS
+
+Unit Test
+
+40 Passed
 
 0 Failed
 
@@ -116,11 +103,23 @@ Collector
 
 ↓
 
+Storage
+
+↓
+
+Repository
+
+↓
+
 Analyzer
 
 ↓
 
 Engine
+
+↓
+
+Dashboard
 
 ↓
 
@@ -132,44 +131,24 @@ Test
 
 ---
 
-# Current MorningBrief
-
-Implemented
-
-- Global Summary
-- Korea Summary
-- News Summary
-- Risk Summary
-- Watch List
-
-Next
-
-- CIO Comment
-
----
-
 # Roadmap
 
-FEATURE-014 : Morning Brief Upgrade
+FEATURE-016 Historical Data Manager ✅
 
 ↓
 
-FEATURE-015 : Dashboard
+FEATURE-017 Backtest Engine
 
 ↓
 
-FEATURE-016 : Backtest
+FEATURE-018 Portfolio Optimizer
 
 ↓
 
-FEATURE-017 : Portfolio Optimizer
-
-↓
-
-FEATURE-018 : AI CIO
+FEATURE-019 AI CIO
 
 ---
 
-# Recent Release
+# Current Release
 
-release : v2.2.0-alpha
+Release : v0.4.0-alpha
