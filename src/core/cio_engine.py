@@ -14,6 +14,7 @@ from src.collectors.news_collector import NewsCollector
 from src.analyzers.news_analyzer import NewsAnalyzer
 from src.core.decision_engine import DecisionEngine
 from src.reports.morning_brief import MorningBrief
+from src.dashboard.dashboard_renderer import DashboardRenderer
 from src.utils.logger import Logger
 
 
@@ -40,6 +41,7 @@ class CIOEngine:
         self.decision_engine = DecisionEngine()
 
         self.brief = MorningBrief()
+        self.dashboard = DashboardRenderer()
 
         # Shared Context
         self.context: dict = {}
@@ -103,43 +105,27 @@ class CIOEngine:
         decision = self.decision_engine.make_decision(score)
 
         self.context["decision"] = decision
+        
+
+    def show_dashboard(self) -> None:
+        """Display Dashboard"""
+
+        print("[4/5] Dashboard")
+
+        dashboard = self.dashboard.render(
+            self.context["market"],
+            self.context["score"],
+            self.context["decision"],
+            self.context["news"],
+        )
 
         print()
-        print("=" * 50)
-        print("Today's CIO Score")
-        print("=" * 50)
-
-        print(f"Macro      : {score.macro:.2f}")
-        print(f"Market     : {score.market:.2f}")
-        print(f"Sector     : {score.sector:.2f}")
-        print(f"MoneyFlow  : {score.money_flow:.2f}")
-        print(f"News       : {score.news:.2f}")
-        print(f"Portfolio  : {score.portfolio:.2f}")
-        print(f"Risk       : {score.risk:.2f}")
-
-        print("-" * 50)
-
-        print(f"TOTAL SCORE : {score.total:.2f}")
-        print(f"GRADE       : {score.grade}")
-        print(f"RATING      : {score.stars}")
-
-        print("=" * 50)
-
-        print()
-        print("Today's Decision")
-        print("=" * 50)
-
-        print(f"Market Status : {decision.market_status}")
-        print(f"Action        : {decision.action}")
-        print(f"Cash Ratio    : {decision.cash_ratio}%")
-        print(f"Stock Ratio   : {decision.stock_ratio}%")
-
-        print("=" * 50)
+        print(dashboard)
 
     def generate_reports(self) -> None:
         """Generate Morning Brief"""
 
-        print("[4/5] Generate Reports")
+        print("[5/6] Generate Reports")
 
         report = self.brief.generate(
             self.context["market"],
@@ -179,5 +165,6 @@ class CIOEngine:
         self.initialize()
         self.load_data()
         self.analyze()
+        self.show_dashboard()
         self.generate_reports()
         self.ready()
