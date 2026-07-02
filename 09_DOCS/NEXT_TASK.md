@@ -7,99 +7,253 @@ Last Update : 2026-07-02
 
 ---
 
-# Sprint
+# Current Status
 
-Sprint 9
+Current Sprint
+
+Sprint 10
+
+Current Feature
+
+FEATURE-018
+
+Portfolio Optimizer
+
+Build
+
+PASS
+
+Unit Test
+
+79 Passed
+
+Integration Test
+
+Passed
 
 ---
 
-# Current Feature
+# Current Progress
 
-FEATURE-017
+## 018-1 Portfolio Model
 
-Backtest Engine
+Status
 
----
+✅ Completed
 
-# Goal
+Contents
 
-Build a reusable backtest engine for strategy validation.
-
-The engine will become the foundation for
-
-- Portfolio Optimizer
-- AI CIO
-- Strategy Evaluation
+- Position Model
+- Portfolio Model
+- Position Unit Test
+- Portfolio Unit Test
 
 ---
 
-# Development Order
+## 018-2 Portfolio Optimizer V1
 
-STEP1
+Status
 
-Trade Model
+✅ Completed
+
+Contents
+
+- PortfolioOptimizer
+- update_weights()
+- Portfolio Optimizer Unit Test
+
+---
+
+## 018-3 Allocation Strategy
+
+Status
+
+🚧 Next Development
+
+Priority
+
+HIGH
+
+---
+
+# Tomorrow Starting Point
+
+STEP 1
+
+Review
+
+Current Files
+
+src/strategies/
+
+strategy.py
+
+buy_and_hold_strategy.py
+
+Decision
+
+Review completed
+
+No modification required
+
+---
+
+STEP 2
+
+Create
+
+src/strategies/allocation_strategy.py
+
+Responsibilities
+
+- Allocation interface
+- Weight calculation interface
+- Abstract class
+
+---
+
+STEP 3
+
+Create
+
+src/strategies/equal_weight_strategy.py
+
+Responsibilities
+
+- Equal Weight Allocation
+- Equal percentage calculation
+- Return allocation result
+
+---
+
+STEP 4
+
+Unit Test
+
+Create
+
+tests/test_allocation_strategy.py
+
+tests/test_equal_weight_strategy.py
+
+Verify
+
+- Equal allocation
+- Empty portfolio
+- Single position
+- Multiple positions
+
+---
+
+STEP 5
+
+Build
+
+Expected Result
+
+PASS
+
+Unit Test
+
+79+
+
+Build Status
+
+Green
+
+---
+
+STEP 6
+
+Portfolio Optimizer Refactoring
+
+Current
+
+PortfolioOptimizer
 
 ↓
 
-STEP2
+update_weights()
 
-Position Model
+Target
 
-↓
-
-STEP3
-
-Backtest Engine
+PortfolioOptimizer
 
 ↓
 
-STEP4
-
-Performance Analyzer
+AllocationStrategy
 
 ↓
 
-STEP5
+EqualWeightStrategy
 
-Metrics
+Goal
 
-- CAGR
-- MDD
-- Win Rate
-- Profit Factor
-- Sharpe Ratio
+Strategy Pattern
+
+Open/Closed Principle
+
+---
+
+# Future Tasks
+
+018-4
+
+Rebalancing Engine
+
+Planned
+
+- Buy Order
+- Sell Order
+- Target Weight
+- Current Weight
+- Rebalancing Plan
+
+---
+
+018-5
+
+Portfolio Metrics
+
+Planned
+
+- Cash Ratio
+- Largest Position
+- Diversification
+- Concentration
+- Portfolio Summary
+
+---
+
+# Development Rules
+
+Always
+
+Review
 
 ↓
 
-STEP6
+Analyze
+
+↓
+
+Decision
+
+↓
+
+Full-file Replacement
+
+↓
 
 Unit Test
 
 ↓
 
-STEP7
-
 Integration Test
 
 ↓
 
-Commit
-
----
-
-# Build Verification
-
-python main.py
-
-↓
-
-PASS
-
-python -m pytest
-
-↓
-
-40 Passed
+Build Green
 
 ↓
 
@@ -107,31 +261,45 @@ Commit
 
 ---
 
-# Working Rules
+# Architecture Rules
 
-Feature Development Only
+Strategy
 
-One Feature At A Time
+↓
 
-No Architecture Change
+Signal Decision
 
-Build Must Stay Green
+PortfolioOptimizer
 
-Review current file before every modification.
+↓
+
+Allocation Logic
+
+PerformanceAnalyzer
+
+↓
+
+Metric Calculation
+
+DecisionEngine
+
+↓
+
+Final Investment Decision
+
+AI CIO
+
+↓
+
+Investment Recommendation
 
 ---
 
-# Expected Architecture
+# End Goal
 
-Historical Repository
+FEATURE-018 Completion
 
-↓
-
-Backtest Engine
-
-↓
-
-Performance Analyzer
+Portfolio Model
 
 ↓
 
@@ -139,4 +307,44 @@ Portfolio Optimizer
 
 ↓
 
-AI CIO
+Allocation Strategy
+
+↓
+
+Rebalancing Engine
+
+↓
+
+Portfolio Metrics
+
+↓
+
+Unit Test
+
+↓
+
+Integration Test
+
+↓
+
+Build Green
+
+↓
+
+Commit
+
+---
+
+# Notes
+
+Never modify existing files before review.
+
+Never provide partial code.
+
+Always provide Full-file Replacement.
+
+Keep Build Green at every step.
+
+Maintain Single Responsibility Principle.
+
+Use One Class = One File architecture.

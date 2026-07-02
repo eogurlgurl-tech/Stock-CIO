@@ -6,44 +6,7 @@ Stock-CIO
 
 from dataclasses import dataclass, field
 
-
-@dataclass(slots=True)
-class Position:
-    """보유 종목"""
-
-    ticker: str
-    name: str
-
-    quantity: int
-
-    average_price: float
-    current_price: float
-
-    weight: float = 0.0
-
-    @property
-    def amount(self) -> float:
-        """평가금액"""
-        return self.quantity * self.current_price
-
-    @property
-    def profit(self) -> float:
-        """평가손익"""
-        return (
-            self.current_price - self.average_price
-        ) * self.quantity
-
-    @property
-    def profit_rate(self) -> float:
-        """수익률 (%)"""
-
-        if self.average_price == 0:
-            return 0.0
-
-        return (
-            (self.current_price - self.average_price)
-            / self.average_price
-        ) * 100
+from .position import Position
 
 
 @dataclass(slots=True)
@@ -61,7 +24,7 @@ class Portfolio:
         """주식 평가금액"""
 
         return sum(
-            position.amount
+            position.market_value
             for position in self.positions
         )
 
@@ -78,7 +41,10 @@ class Portfolio:
         if self.total_asset == 0:
             return 0.0
 
-        return self.cash / self.total_asset * 100
+        return (
+            self.cash
+            / self.total_asset
+        ) * 100
 
     @property
     def stock_ratio(self) -> float:
@@ -87,23 +53,26 @@ class Portfolio:
         if self.total_asset == 0:
             return 0.0
 
-        return self.stock_asset / self.total_asset * 100
+        return (
+            self.stock_asset
+            / self.total_asset
+        ) * 100
 
     @property
     def total_profit(self) -> float:
         """총 평가손익"""
 
         return sum(
-            position.profit
+            position.unrealized_profit
             for position in self.positions
         )
 
     @property
     def total_profit_rate(self) -> float:
-        """총 수익률 (%)"""
+        """총 평가수익률 (%)"""
 
         invested = sum(
-            position.average_price * position.quantity
+            position.cost_basis
             for position in self.positions
         )
 
@@ -111,5 +80,12 @@ class Portfolio:
             return 0.0
 
         return (
-            self.total_profit / invested
+            self.total_profit
+            / invested
         ) * 100
+
+    @property
+    def is_empty(self) -> bool:
+        """보유 종목 여부"""
+
+        return len(self.positions) == 0

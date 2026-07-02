@@ -3,92 +3,239 @@
 
 Version : v0.4.0-alpha
 
-Last Update : 2026-07-02
+Session Date : 2026-07-02
 
 ---
 
 # Sprint
 
-Sprint 8
+Sprint 10
 
-Status : COMPLETED
+Status
 
-Progress : 100%
+In Progress
 
----
+Current Feature
 
-# Build Status
-
-PASS
+FEATURE-018 Portfolio Optimizer
 
 ---
 
-# Current Version
+# Session Summary
 
-v0.4.0-alpha
+Today's Goal
+
+Implement the foundation of the Portfolio Optimizer.
+
+Status
+
+✅ Completed Successfully
 
 ---
 
-# Completed
+# Completed Today
 
-## FEATURE-016
-
-✅ Historical Data Manager
+## Portfolio Model
 
 Completed
 
-- HistoricalPrice Model
-- HistoricalDataLoader
-- CSVStorage
-- HistoricalRepository
-- Repository Pattern
-- Dependency Injection
-- CSV Persistence
-- Unit Test
-- Repository Test
-- CSV Storage Test
+- Position Model reviewed
+- Portfolio Model reviewed
+- Position model standardized
+- Portfolio model refactored
+- Duplicate Position model removed
+- Single source Position architecture established
 
 ---
 
-# Test Result
+## Portfolio Optimizer
 
-python -m pytest
+Completed
 
-40 Passed
+- PortfolioOptimizer created
+- update_weights() implemented
+- Weight calculation completed
 
-0 Failed
+---
+
+## Unit Test
+
+Completed
+
+Added
+
+- test_position.py
+- test_portfolio.py
+- test_portfolio_optimizer.py
 
 ---
 
 # Build Result
 
-python main.py
+Build
 
 PASS
 
-Morning Brief Generated
+Unit Test
 
-Dashboard Generated
+79 Passed
 
----
+Integration Test
 
-# Next Sprint
-
-Sprint 9
-
-FEATURE-017
-
-Backtest Engine
+Passed
 
 ---
 
-# Development Rules
+# Files Modified
 
-- Feature Development Only
-- One Feature At A Time
-- Full-file Replacement Preferred
-- No Architecture Change
-- Build Must Stay Green
+src/models/position.py
+
+src/models/portfolio.py
+
+src/core/portfolio_optimizer.py
+
+tests/test_position.py
+
+tests/test_portfolio.py
+
+tests/test_portfolio_optimizer.py
+
+---
+
+# Architecture Decision
+
+## Position
+
+Single Source of Truth
+
+Location
+
+src/models/position.py
+
+Portfolio no longer owns Position class.
+
+---
+
+## Portfolio
+
+Responsibilities
+
+- Cash
+- Position List
+- Asset Calculation
+- Profit Calculation
+
+Portfolio does NOT perform
+
+- Allocation
+- Rebalancing
+- Decision Making
+
+---
+
+## Portfolio Optimizer
+
+Responsibilities
+
+Current Version
+
+PortfolioOptimizer V1
+
+Functions
+
+- update_weights()
+
+Current Scope
+
+Weight calculation only.
+
+Future versions will support Strategy Pattern.
+
+---
+
+# Architecture Principles
+
+Current principles
+
+- One Class = One File
+- Single Responsibility Principle
+- Build Green
+- Full-file Replacement Only
+- Review Before Modify
 - Unit Test Required
-- Review current file before every modification.
+- Integration Test Required
 
+---
+
+# Current Progress
+
+FEATURE-018
+
+018-1 Portfolio Model
+
+Completed
+
+018-2 Portfolio Optimizer V1
+
+Completed
+
+018-3 Allocation Strategy
+
+Ready
+
+018-4 Rebalancing Engine
+
+Pending
+
+018-5 Portfolio Metrics
+
+Pending
+
+---
+
+# Next Session Starting Point
+
+Start from
+
+FEATURE-018-3
+
+Allocation Strategy
+
+Development Order
+
+1. Review strategy.py
+2. Create allocation_strategy.py
+3. Create equal_weight_strategy.py
+4. Unit Test
+5. Build Green
+6. Refactor PortfolioOptimizer
+
+---
+
+# Reminder
+
+Always follow the development workflow.
+
+Review
+
+↓
+
+Decision
+
+↓
+
+Full-file Replacement
+
+↓
+
+Unit Test
+
+↓
+
+Integration Test
+
+↓
+
+Commit
+
+Current Build must remain Green.
