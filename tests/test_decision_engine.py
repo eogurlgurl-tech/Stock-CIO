@@ -1,103 +1,128 @@
 """
-Test DecisionEngine
-
-Stock-CIO
+Unit tests for DecisionEngine.
 """
 
-from src.core.decision_engine import DecisionEngine
-from src.models.score import Score
+from src.constants.decision_type import DecisionType
+from src.constants.rebalancing_action import (
+    RebalancingAction,
+)
+from src.constants.risk_level import RiskLevel
+from src.models.rebalancing_recommendation import (
+    RebalancingRecommendation,
+)
+from src.models.recommendation import Recommendation
+from src.services.decision_engine import DecisionEngine
 
 
-def create_score(total: float) -> Score:
+class TestDecisionEngine:
 
-    score = Score()
+    def setup_method(self):
+        self.engine = DecisionEngine()
 
-    score.total = total
+    def _recommendation(self) -> Recommendation:
+        return Recommendation(
+            overall_grade="A",
+            portfolio_score=90.0,
+            risk_level=RiskLevel.LOW,
+            summary="Portfolio is healthy.",
+        )
 
-    return score
+    def test_buy_decision(self):
+        recommendations = [
+            RebalancingRecommendation(
+                ticker="AAPL",
+                action=RebalancingAction.BUY,
+                current_weight=10.0,
+                target_weight=20.0,
+                weight_difference=10.0,
+                reason="Buy recommendation.",
+            )
+        ]
 
+        decision = self.engine.generate(
+            self._recommendation(),
+            recommendations,
+        )
 
-def test_strong_buy():
+        assert decision.decision == DecisionType.BUY
 
-    engine = DecisionEngine()
+    def test_sell_decision(self):
+        recommendations = [
+            RebalancingRecommendation(
+                ticker="AAPL",
+                action=RebalancingAction.SELL,
+                current_weight=70.0,
+                target_weight=40.0,
+                weight_difference=-30.0,
+                reason="Sell recommendation.",
+            )
+        ]
 
-    decision = engine.make_decision(create_score(95))
+        decision = self.engine.generate(
+            self._recommendation(),
+            recommendations,
+        )
 
-    assert decision.market_status == "VERY BULLISH"
-    assert decision.action == "STRONG BUY"
-    assert decision.cash_ratio == 5
-    assert decision.stock_ratio == 95
+        assert decision.decision == DecisionType.SELL
 
+    def test_hold_decision(self):
+        recommendations = [
+            RebalancingRecommendation(
+                ticker="AAPL",
+                action=RebalancingAction.HOLD,
+                current_weight=40.0,
+                target_weight=40.0,
+                weight_difference=0.0,
+                reason="Hold recommendation.",
+            )
+        ]
 
-def test_buy():
+        decision = self.engine.generate(
+            self._recommendation(),
+            recommendations,
+        )
 
-    engine = DecisionEngine()
+        assert decision.decision == DecisionType.HOLD
 
-    decision = engine.make_decision(create_score(85))
+    def test_mixed_recommendation(self):
+        recommendations = [
+            RebalancingRecommendation(
+                ticker="AAA",
+                action=RebalancingAction.BUY,
+                current_weight=10.0,
+                target_weight=20.0,
+                weight_difference=10.0,
+                reason="Buy.",
+            ),
+            RebalancingRecommendation(
+                ticker="BBB",
+                action=RebalancingAction.SELL,
+                current_weight=70.0,
+                target_weight=40.0,
+                weight_difference=-30.0,
+                reason="Sell.",
+            ),
+        ]
 
-    assert decision.market_status == "BULLISH"
-    assert decision.action == "BUY"
+        decision = self.engine.generate(
+            self._recommendation(),
+            recommendations,
+        )
 
+        assert decision.decision == DecisionType.SELL
 
-def test_accumulate():
+    def test_confidence(self):
+        decision = self.engine.generate(
+            self._recommendation(),
+            [],
+        )
 
-    engine = DecisionEngine()
+        assert decision.confidence == 0.9
 
-    decision = engine.make_decision(create_score(75))
+    def test_empty_recommendation(self):
+        decision = self.engine.generate(
+            self._recommendation(),
+            [],
+        )
 
-    assert decision.market_status == "NEUTRAL"
-    assert decision.action == "ACCUMULATE"
-
-
-def test_hold():
-
-    engine = DecisionEngine()
-
-    decision = engine.make_decision(create_score(65))
-
-    assert decision.market_status == "NEUTRAL"
-    assert decision.action == "HOLD"
-
-
-def test_reduce():
-
-    engine = DecisionEngine()
-
-    decision = engine.make_decision(create_score(45))
-
-    assert decision.market_status == "BEARISH"
-    assert decision.action == "REDUCE"
-
-
-def test_defense():
-
-    engine = DecisionEngine()
-
-    decision = engine.make_decision(create_score(20))
-
-    assert decision.market_status == "VERY BEARISH"
-    assert decision.action == "DEFENSE"
-
-
-def test_ratio_sum():
-
-    engine = DecisionEngine()
-
-    for total in (95, 85, 75, 65, 45, 20):
-
-        decision = engine.make_decision(create_score(total))
-
-        assert (
-            decision.cash_ratio
-            + decision.stock_ratio
-        ) == 100
-
-
-def test_summary_created():
-
-    engine = DecisionEngine()
-
-    decision = engine.make_decision(create_score(95))
-
-    assert decision.summary != ""
-    assert "Overall Score" in decision.summary
+        assert decision.decision == DecisionType.HOLD

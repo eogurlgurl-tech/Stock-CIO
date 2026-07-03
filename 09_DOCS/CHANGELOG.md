@@ -1,325 +1,70 @@
 
-
-# STOCK-CIO Changelog
-
-Project
-
-STOCK-CIO
-
-AI Chief Investment Officer System
+# CHANGELOG
 
 ---
 
-# Version
+## v0.4.0-alpha (2026-07-03)
 
-Current Version
-
-v0.4.0-alpha
-
-Last Update
-
-2026-07-02
-
----
-
-# Change History
-
-## FEATURE-018
-
-Portfolio Optimizer
-
-Status
-
-🚧 In Progress
-
----
-
-## 018-1 Portfolio Model
-
-Status
-
-✅ Completed
+### Sprint 14 - FEATURE-022 Decision Engine
 
 ### Added
 
-Position Model
+* DecisionType enum
+* Decision model
+* Decision Engine
+* Decision model unit test
+* Decision Engine unit test
 
-Portfolio Model
+### Improved
 
-### Modified
+* Integrated Recommendation Engine output
+* Integrated Rebalancing Recommendation output
+* Unified final investment decision workflow
+* Decision summary generation
+* Decision reason generation
 
-src/models/position.py
+### Verified
 
-- Standard Position Model
-- Single Source of Truth
-- Added name
-- Added weight
-- Added market_value
-- Added cost_basis
-- Added unrealized_profit
-- Added return_rate
-
----
-
-src/models/portfolio.py
-
-- Removed duplicated Position class
-- Import Position model
-- Refactored Portfolio
-- Added is_empty
-- Unified property names
+* Build Green
+* 111 Unit Tests Passed
+* Integration Tests Passed
+* Regression Zero
 
 ---
 
-### Added Tests
+## v0.4.0-alpha (2026-07-03)
 
-tests/test_position.py
-
-- Position Creation
-- Cost Basis
-- Market Value
-- Unrealized Profit
-- Return Rate
-- Open Position
-
-tests/test_portfolio.py
-
-- Empty Portfolio
-- Stock Asset
-- Total Asset
-- Cash Ratio
-- Stock Ratio
-- Total Profit
-- Total Profit Rate
-- is_empty
-
----
-
-## 018-2 Portfolio Optimizer V1
-
-Status
-
-✅ Completed
+### Sprint 13 - FEATURE-021 Rebalancing Recommendation
 
 ### Added
 
-src/core/portfolio_optimizer.py
+* RebalancingRecommendation model
+* RebalancingRecommendationEngine
+* RebalancingAction enum
+* Unit tests for Rebalancing Recommendation
 
-Responsibilities
+### Improved
 
-- Portfolio weight calculation
-- Position weight update
+* Portfolio rebalancing recommendation workflow
+* Recommendation reason generation
+* Rebalancing action evaluation
+* Test coverage for recommendation engine
 
-Current Functions
+### Verified
 
-- update_weights()
-
----
-
-### Added Tests
-
-tests/test_portfolio_optimizer.py
-
-Coverage
-
-- Empty Portfolio
-- Single Position
-- Two Positions
-- Three Positions
-- Zero Asset
+* Build Green
+* Regression Zero
 
 ---
 
-## Build Result
+## v0.4.0-alpha (2026-07-03)
 
-Build
+### Sprint 12 - FEATURE-020 AI Portfolio Recommendation
 
-PASS
+### Added
 
-Unit Test
-
-79 Passed
-
-Integration Test
-
-Passed
-
----
-
-# Files Added
-
-src/core/portfolio_optimizer.py
-
-tests/test_position.py
-
-tests/test_portfolio.py
-
-tests/test_portfolio_optimizer.py
-
----
-
-# Files Modified
-
-src/models/position.py
-
-src/models/portfolio.py
-
----
-
-# Architecture Changes
-
-Before
-
-Position
-
-↓
-
-Portfolio
-
-↓
-
-Backtest
-
-After
-
-Position
-
-↓
-
-Portfolio
-
-↓
-
-Portfolio Optimizer
-
-↓
-
-Decision Engine (Future)
-
----
-
-# Current Architecture
-
-Market
-
-↓
-
-Collectors
-
-↓
-
-Repositories
-
-↓
-
-HistoricalPrice
-
-↓
-
-Strategy
-
-↓
-
-Signal
-
-↓
-
-BacktestEngine
-
-↓
-
-PerformanceAnalyzer
-
-↓
-
-Portfolio
-
-↓
-
-PortfolioOptimizer
-
-↓
-
-DecisionEngine
-
-↓
-
-AI CIO
-
----
-
-# Next Feature
-
-FEATURE-018-3
-
-Allocation Strategy
-
-Planned Files
-
-src/strategies/allocation_strategy.py
-
-src/strategies/equal_weight_strategy.py
-
-tests/test_allocation_strategy.py
-
-tests/test_equal_weight_strategy.py
-
----
-
-# Planned Features
-
-018-3
-
-Allocation Strategy
-
-Status
-
-🚧 Ready
-
----
-
-018-4
-
-Rebalancing Engine
-
-Status
-
-⏳ Planned
-
----
-
-018-5
-
-Portfolio Metrics
-
-Status
-
-⏳ Planned
-
----
-
-# Quality Status
-
-Build
-
-✅ PASS
-
-Unit Test
-
-✅ 79 Passed
-
-Integration Test
-
-✅ Passed
-
-Architecture
-
-✅ Stable
-
-Code Quality
-
-✅ Stable
-
-Project Status
-
-✅ Ready for Next Session
+* Recommendation Model
+* Recommendation Engine
+* Portfolio Recommendation
+* Recommendation Summary
+* Recommendation Unit Tests
