@@ -1,56 +1,61 @@
-
 # PROJECT STATUS
 
 Version
+
 v0.4.0-alpha
 
 Sprint
-17
+
+18
 
 Status
-In Progress
+
+Completed
 
 Build
+
 PASS
 
 Unit Test
-118 Passed
+
+135 Passed
 
 Regression
+
 Zero
 
 ---
 
 ## Completed
 
-FEATURE-024
-Application Orchestrator
+FEATURE-026 Target Portfolio Pipeline
 
-- run() Entry Point
-- start() Compatibility
-- Workflow Refactoring
-- Portfolio Pipeline Stub
+- Current Portfolio weight calculation
+- TargetPortfolioBuilder
+- Allocation Strategy integration
+- RiskReport and Recommendation integration
+- RebalancePlan generation
+- Rebalancing Recommendation conversion
+- Portfolio Decision generation
+- Dashboard Portfolio section
+- MorningBrief Portfolio section
+- End-to-end Portfolio Pipeline tests
 
 ---
 
-## Current Feature
+## Architecture Contract
 
-FEATURE-025
-Portfolio Pipeline
+- PortfolioOptimizer updates Current Portfolio weights directly.
+- TargetPortfolioBuilder creates a separate Target Portfolio.
+- RebalancingEngine compares Current and Target Portfolio.
+- CIOEngine owns workflow orchestration.
+- Existing public interfaces remain compatible.
 
-Completed
+---
 
-- PortfolioLoader
-- CIOEngine Integration
-- Portfolio Context
-- Dependency Injection
-- PortfolioAnalyzer Review
-- RiskAnalyzer Review
-- RecommendationEngine Review
-- RebalancingRecommendationEngine Review
-- Portfolio Decision Review
+## Verification
 
-Pending
-
-- Target Portfolio
-- RebalancingEngine Integration
+- Python 3.14.4
+- pytest 9.1.1
+- 135 Passed
+- Regression Zero

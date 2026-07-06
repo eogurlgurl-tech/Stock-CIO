@@ -1,14 +1,12 @@
 """
 Rebalancing Recommendation Engine
 
-Generates portfolio rebalancing recommendations from a
-Portfolio and RiskReport.
+Generates portfolio rebalancing recommendations.
 """
 
-from src.constants.rebalancing_action import (
-    RebalancingAction,
-)
+from src.constants.rebalancing_action import RebalancingAction
 from src.models.portfolio import Portfolio
+from src.models.rebalance_plan import RebalancePlan
 from src.models.rebalancing_recommendation import (
     RebalancingRecommendation,
 )
@@ -23,19 +21,7 @@ class RebalancingRecommendationEngine:
         portfolio: Portfolio,
         risk_report: RiskReport,
     ) -> list[RebalancingRecommendation]:
-        """
-        Generate portfolio rebalancing recommendations.
-
-        Parameters
-        ----------
-        portfolio : Portfolio
-
-        risk_report : RiskReport
-
-        Returns
-        -------
-        list[RebalancingRecommendation]
-        """
+        """Generate recommendations from portfolio risk."""
 
         if portfolio.is_empty:
             return []
@@ -50,7 +36,6 @@ class RebalancingRecommendationEngine:
         )
 
         for position in portfolio.positions:
-
             action = self._determine_action(
                 position.weight,
                 largest_weight,
@@ -62,28 +47,45 @@ class RebalancingRecommendationEngine:
                     ticker=position.ticker,
                     action=action,
                     current_weight=position.weight,
-                    # FEATURE-025:
-                    # Target Portfolio가 아직 존재하지 않으므로
-                    # 현재 비중을 유지한다.
                     target_weight=position.weight,
                     weight_difference=0.0,
-                    reason=self._build_reason(
-                        action,
-                    ),
+                    reason=self._build_reason(action),
                 )
             )
 
         return recommendations
 
-    def _determine_action(
+    def generate_from_plan(
         self,
+        plan: RebalancePlan,
+    ) -> list[RebalancingRecommendation]:
+        """Generate recommendations from a rebalance plan."""
+
+        return [
+            RebalancingRecommendation(
+                ticker=item.ticker,
+                action=RebalancingAction(
+                    item.action.value
+                ),
+                current_weight=item.current_weight,
+                target_weight=item.target_weight,
+                weight_difference=item.difference,
+                reason=self._build_reason(
+                    RebalancingAction(
+                        item.action.value
+                    )
+                ),
+            )
+            for item in plan.items
+        ]
+
+    @staticmethod
+    def _determine_action(
         current_weight: float,
         largest_weight: float,
         risk_report: RiskReport,
     ) -> RebalancingAction:
-        """
-        Determine portfolio action.
-        """
+        """Determine a portfolio action from risk."""
 
         if (
             current_weight == largest_weight
@@ -103,9 +105,7 @@ class RebalancingRecommendationEngine:
     def _build_reason(
         action: RebalancingAction,
     ) -> str:
-        """
-        Build recommendation reason.
-        """
+        """Build a recommendation reason."""
 
         if action == RebalancingAction.SELL:
             return (
@@ -117,6 +117,4 @@ class RebalancingRecommendationEngine:
                 "Utilize excess cash to improve allocation."
             )
 
-        return (
-            "Current allocation is appropriate."
-        )
+        return "Current allocation is appropriate."

@@ -12,21 +12,13 @@ from src.strategies.market_value_weight_strategy import (
 
 
 class PortfolioOptimizer:
-    """Portfolio Optimizer"""
+    """Calculate weights for the current portfolio."""
 
     def __init__(
         self,
         strategy: AllocationStrategy | None = None,
     ) -> None:
-        """
-        Portfolio Optimizer
-
-        Parameters
-        ----------
-        strategy : AllocationStrategy, optional
-            Allocation strategy.
-            Defaults to MarketValueWeightStrategy.
-        """
+        """Initialize the optimizer with an allocation strategy."""
 
         self._strategy = (
             strategy
@@ -36,7 +28,7 @@ class PortfolioOptimizer:
 
     @property
     def strategy(self) -> AllocationStrategy:
-        """Current Allocation Strategy"""
+        """Return the current allocation strategy."""
 
         return self._strategy
 
@@ -44,7 +36,7 @@ class PortfolioOptimizer:
         self,
         strategy: AllocationStrategy,
     ) -> None:
-        """Change allocation strategy"""
+        """Change the allocation strategy."""
 
         self._strategy = strategy
 
@@ -52,6 +44,6 @@ class PortfolioOptimizer:
         self,
         portfolio: Portfolio,
     ) -> Portfolio:
-        """Apply allocation strategy"""
+        """Calculate and update current portfolio weights."""
 
         return self._strategy.allocate(portfolio)

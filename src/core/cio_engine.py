@@ -13,9 +13,28 @@ from src.analyzers.score_engine import ScoreEngine
 from src.collectors.market_data_loader import MarketDataLoader
 from src.collectors.news_collector import NewsCollector
 from src.collectors.portfolio_loader import PortfolioLoader
-from src.core.decision_engine import DecisionEngine
+from src.core.decision_engine import DecisionEngine as MarketDecisionEngine
+from src.core.portfolio_optimizer import PortfolioOptimizer
 from src.dashboard.dashboard_renderer import DashboardRenderer
+from src.dashboard.portfolio_dashboard_renderer import (
+    PortfolioDashboardRenderer,
+)
 from src.reports.morning_brief import MorningBrief
+from src.reports.portfolio_morning_brief_appender import (
+    PortfolioMorningBriefAppender,
+)
+from src.services.decision_engine import (
+    DecisionEngine as PortfolioDecisionEngine,
+)
+from src.services.rebalancing_engine import RebalancingEngine
+from src.services.rebalancing_recommendation_engine import (
+    RebalancingRecommendationEngine,
+)
+from src.services.recommendation_engine import RecommendationEngine
+from src.services.risk_analyzer import RiskAnalyzer
+from src.services.target_portfolio_builder import (
+    TargetPortfolioBuilder,
+)
 from src.utils.logger import Logger
 
 
@@ -25,12 +44,9 @@ class CIOEngine:
     VERSION = "v0.4.0-alpha"
 
     def __init__(self) -> None:
-
         self.started_at = datetime.now()
-
         self.logger = Logger.get_logger()
 
-        # Components
         self.market_loader = MarketDataLoader()
         self.portfolio_loader = PortfolioLoader()
 
@@ -40,12 +56,23 @@ class CIOEngine:
         self.news_analyzer = NewsAnalyzer()
 
         self.score_engine = ScoreEngine()
-        self.decision_engine = DecisionEngine()
+        self.decision_engine = MarketDecisionEngine()
+
+        self.portfolio_optimizer = PortfolioOptimizer()
+        self.target_portfolio_builder = TargetPortfolioBuilder()
+        self.risk_analyzer = RiskAnalyzer()
+        self.recommendation_engine = RecommendationEngine()
+        self.rebalancing_engine = RebalancingEngine()
+        self.rebalancing_recommendation_engine = (
+            RebalancingRecommendationEngine()
+        )
+        self.portfolio_decision_engine = PortfolioDecisionEngine()
 
         self.dashboard = DashboardRenderer()
+        self.portfolio_dashboard = PortfolioDashboardRenderer()
         self.brief = MorningBrief()
+        self.portfolio_brief = PortfolioMorningBriefAppender()
 
-        # Shared Context
         self.context: dict = {}
 
     def initialize(self) -> None:
@@ -59,7 +86,6 @@ class CIOEngine:
         print("[2/8] Load Market Data")
 
         market = self.market_loader.load()
-
         self.context["market"] = market
 
         print(f"Market : {market.market}")
@@ -113,29 +139,49 @@ class CIOEngine:
         self.context["decision"] = decision
 
     def run_portfolio_pipeline(self) -> None:
-        """
-        Execute portfolio pipeline.
-
-        FEATURE-025
-        Portfolio Context를 생성하고 PortfolioLoader를 통해
-        현재 Portfolio를 공급한다.
-        Target Portfolio 생성 및 Rebalancing은
-        향후 Feature에서 연결한다.
-        """
+        """Execute the complete portfolio workflow."""
 
         print("[6/8] Portfolio Pipeline")
 
         portfolio = self.portfolio_loader.load()
+        self.portfolio_optimizer.update_weights(portfolio)
 
-        portfolio_context = {
+        target = self.target_portfolio_builder.build(portfolio)
+        risk_report = self.risk_analyzer.analyze(portfolio)
+
+        recommendation = self.recommendation_engine.generate(
+            portfolio,
+            risk_report,
+        )
+
+        rebalancing_plan = self.rebalancing_engine.create_plan(
+            current=portfolio,
+            target=target,
+        )
+
+        rebalancing_recommendations = (
+            self.rebalancing_recommendation_engine
+            .generate_from_plan(rebalancing_plan)
+        )
+
+        portfolio_decision = (
+            self.portfolio_decision_engine.generate(
+                recommendation,
+                rebalancing_recommendations,
+            )
+        )
+
+        self.context["portfolio"] = {
             "portfolio": portfolio,
-            "analysis": None,
-            "recommendation": None,
-            "rebalancing": None,
-            "decision": None,
+            "target": target,
+            "analysis": risk_report,
+            "recommendation": recommendation,
+            "rebalancing": rebalancing_plan,
+            "rebalancing_recommendations": (
+                rebalancing_recommendations
+            ),
+            "decision": portfolio_decision,
         }
-
-        self.context["portfolio"] = portfolio_context
 
     def render_dashboard(self) -> None:
         """Render dashboard."""
@@ -147,6 +193,19 @@ class CIOEngine:
             self.context["score"],
             self.context["decision"],
             self.context["news"],
+        )
+
+        portfolio_context = self.context["portfolio"]
+        portfolio_dashboard = self.portfolio_dashboard.render(
+            portfolio_context["portfolio"],
+            portfolio_context["analysis"],
+            portfolio_context["decision"],
+            portfolio_context["rebalancing"],
+        )
+
+        dashboard = (
+            f"{dashboard}\n\n"
+            f"{portfolio_dashboard}"
         )
 
         self.context["dashboard"] = dashboard
@@ -166,6 +225,15 @@ class CIOEngine:
             self.context["news"],
         )
 
+        portfolio_context = self.context["portfolio"]
+        self.portfolio_brief.append(
+            report,
+            portfolio_context["portfolio"],
+            portfolio_context["analysis"],
+            portfolio_context["decision"],
+            portfolio_context["rebalancing"],
+        )
+
         self.context["report"] = report
 
         print(f"Report Saved : {report}")
@@ -181,7 +249,7 @@ class CIOEngine:
         print("=" * 60)
 
         for key in self.context:
-            print(f"✔ {key}")
+            print(f"- {key}")
 
         print("=" * 60)
 
@@ -189,7 +257,7 @@ class CIOEngine:
         """Official application entry point."""
 
         print("=" * 60)
-        print("📈 STOCK-CIO")
+        print("STOCK-CIO")
         print("AI Chief Investment Officer")
         print(f"Version : {self.VERSION}")
         print(f"Started : {self.started_at:%Y-%m-%d %H:%M:%S}")

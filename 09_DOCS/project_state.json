@@ -3,54 +3,18 @@
         "name": "STOCK-CIO",
         "version": "v0.4.0-alpha"
     },
-
     "current": {
-        "sprint": "Sprint D1",
-        "feature": "Developer Automation",
-        "phase": "Development"
+        "sprint": 18,
+        "feature": "FEATURE-026 Target Portfolio Pipeline",
+        "phase": "Completed"
     },
-
     "build": {
         "status": "PASS",
-        "tests": 106,
-        "coverage": null
+        "tests": 135,
+        "regression": "Zero"
     },
-
-    "changes": {
-        "added": [
-            "ProjectState model",
-            "Markdown Builder",
-            "Git Helper"
-        ],
-
-        "changed": [
-            "STATUS document generation"
-        ],
-
-        "fixed": [
-            "Document generation consistency"
-        ]
-    },
-
-    "documents": {
-        "status": "PROJECT_STATUS.md",
-        "session": "SESSION.md",
-        "next_task": "NEXT_TASK.md",
-        "changelog": "CHANGELOG.md"
-    },
-
-    "automation": {
-        "enabled": true,
-        "last_run": null
-    },
-
-    "git": {
-        "branch": "main",
-        "commit": null
-    },
-
     "next": {
-        "sprint": "Sprint D1-HF02",
-        "feature": "Developer Automation Framework"
+        "sprint": 19,
+        "feature": "FEATURE-027 Portfolio Data Integration"
     }
 }

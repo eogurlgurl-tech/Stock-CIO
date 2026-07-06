@@ -17,21 +17,28 @@ class MarketValueWeightStrategy(AllocationStrategy):
         portfolio: Portfolio,
     ) -> Portfolio:
         """
-        평가금액 기준 비중 계산
+        Apply market value based allocation
+        to the target portfolio.
         """
 
         total_asset = portfolio.stock_asset
 
-        if total_asset == 0:
+        if total_asset <= 0:
+
             for position in portfolio.positions:
                 position.weight = 0.0
 
             return portfolio
 
         for position in portfolio.positions:
-            position.weight = (
-                position.market_value
-                / total_asset
-            ) * 100
+
+            position.weight = round(
+                (
+                    position.market_value
+                    / total_asset
+                )
+                * 100,
+                2,
+            )
 
         return portfolio

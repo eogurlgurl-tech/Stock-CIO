@@ -18,46 +18,29 @@ class RecommendationEngine:
         portfolio: Portfolio,
         risk_report: RiskReport,
     ) -> Recommendation:
-        """
-        Generate portfolio recommendation.
-
-        Parameters
-        ----------
-        portfolio : Portfolio
-
-        risk_report : RiskReport
-
-        Returns
-        -------
-        Recommendation
-        """
+        """Generate a recommendation from a risk report."""
 
         items: list[str] = []
 
-        if portfolio.is_empty:
-            items.append(
-                "No portfolio positions available."
-            )
-        else:
-            self._evaluate_concentration(
-                risk_report,
-                items,
-            )
+        self._evaluate_concentration(
+            risk_report,
+            items,
+        )
 
-            self._evaluate_diversification(
-                risk_report,
-                items,
-            )
+        self._evaluate_diversification(
+            risk_report,
+            items,
+        )
 
-            self._evaluate_cash(
-                risk_report,
-                items,
-            )
+        self._evaluate_cash(
+            risk_report,
+            items,
+        )
 
-            self._evaluate_risk(
-                risk_report,
-                items,
-            )
+        self._evaluate_risk(
+            risk_report,
+            items,
+        )
 
         if not items:
             items.append(
@@ -80,7 +63,7 @@ class RecommendationEngine:
     def _grade(
         score: float,
     ) -> str:
-        """Overall recommendation grade."""
+        """Return the overall recommendation grade."""
 
         if score >= 90:
             return "A"
@@ -100,7 +83,7 @@ class RecommendationEngine:
     def _summary(
         items: list[str],
     ) -> str:
-        """Create recommendation summary."""
+        """Create a recommendation summary."""
 
         return " ".join(items)
 
@@ -109,7 +92,7 @@ class RecommendationEngine:
         report: RiskReport,
         items: list[str],
     ) -> None:
-        """Evaluate concentration."""
+        """Evaluate portfolio concentration."""
 
         if report.largest_weight > 60:
             items.append(
@@ -121,7 +104,7 @@ class RecommendationEngine:
         report: RiskReport,
         items: list[str],
     ) -> None:
-        """Evaluate diversification."""
+        """Evaluate portfolio diversification."""
 
         if report.position_count < 3:
             items.append(
