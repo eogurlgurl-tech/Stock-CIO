@@ -1,76 +1,114 @@
 
-# STOCK-CIO Session
+# SESSION.md
 
-Version : v0.4.0-alpha
+# STOCK-CIO Development Session
 
-Session Date : 2026-07-03
+## Session Information
 
----
-
-## Completed
-
-Sprint 15
-
-FEATURE-023
-
-AI CIO Engine
-
-Completed Successfully
+| Item    | Value                    |
+| ------- | ------------------------ |
+| Date    | 2026-07-06               |
+| Sprint  | 16                       |
+| Version | v0.4.0-alpha             |
+| Feature | FEATURE-024              |
+| Title   | Application Orchestrator |
 
 ---
 
-## Today's Progress
+# Objective
 
-Completed
-
-* Sprint 16 Architecture Review
-* Project Tree Analysis
-* Core Engine Analysis
-* Portfolio Optimizer Analysis
-* Workflow Design
-* Application Orchestrator Design
+Refactor `src/core/cio_engine.py` into an Application Orchestrator while preserving the existing architecture and maintaining Regression Zero.
 
 ---
 
-## Build Result
+# Completed Tasks
 
-Build
+## Core Engine
 
-PASS
+- Refactored `CIOEngine` as Application Orchestrator.
+- Added official `run()` entry point.
+- Preserved `start()` for backward compatibility.
+- Separated workflow into independent stages.
+- Preserved shared context management.
 
-Unit Test
+### Workflow
 
-118 Passed
-
-Regression
-
-Zero
+```text
+initialize
+    ↓
+load_market_data
+    ↓
+analyze_market
+    ↓
+calculate_score
+    ↓
+make_market_decision
+    ↓
+run_portfolio_pipeline (Stub)
+    ↓
+render_dashboard
+    ↓
+generate_morning_brief
+    ↓
+ready
+```
 
 ---
 
-## Next Session
+## Main Entry
 
-Sprint 16
-
-FEATURE-024
-
-Application Orchestrator
-
-Implementation
-
-Priority
-
-Highest
+- Updated `main.py` to use `engine.run()`.
 
 ---
 
-## Development Order
+## Architecture
 
-1. Review Risk Analyzer
-2. Review Recommendation Engine
-3. Review Decision Engine
-4. Review AI CIO Engine
-5. Replace src/core/cio_engine.py
-6. Run pytest
-7. Update Documents
-8. Prepare Git Commit
+No Business Logic added.
+
+Business Logic remains inside the service layer.
+
+Core is responsible only for orchestration.
+
+---
+
+## Regression Check
+
+| Item       | Result     |
+| ---------- | ---------- |
+| Build      | PASS       |
+| Unit Test  | 118 Passed |
+| Regression | Zero       |
+
+---
+
+# Issues
+
+During refactoring, the decision model was temporarily renamed to `MarketDecision`.
+
+The project source of truth remains `CIODecision`.
+
+The model name was restored and all related imports were reverted.
+
+Regression was fully recovered.
+
+---
+
+# Result
+
+FEATURE-024 completed successfully.
+
+Application Orchestrator architecture established.
+
+Regression Zero maintained.
+
+118 unit tests passed.
+
+---
+
+# Next Session
+
+Sprint 17
+
+FEATURE-025
+
+Portfolio Pipeline Implementation

@@ -8,20 +8,20 @@ from datetime import datetime
 
 from src.analyzers.macro_analyzer import MacroAnalyzer
 from src.analyzers.market_analyzer import MarketAnalyzer
+from src.analyzers.news_analyzer import NewsAnalyzer
 from src.analyzers.score_engine import ScoreEngine
 from src.collectors.market_data_loader import MarketDataLoader
 from src.collectors.news_collector import NewsCollector
-from src.analyzers.news_analyzer import NewsAnalyzer
 from src.core.decision_engine import DecisionEngine
-from src.reports.morning_brief import MorningBrief
 from src.dashboard.dashboard_renderer import DashboardRenderer
+from src.reports.morning_brief import MorningBrief
 from src.utils.logger import Logger
 
 
 class CIOEngine:
-    """Main application engine."""
+    """Application Orchestrator."""
 
-    VERSION = "0.3.0-alpha"
+    VERSION = "v0.4.0-alpha"
 
     def __init__(self) -> None:
 
@@ -40,20 +40,21 @@ class CIOEngine:
         self.score_engine = ScoreEngine()
         self.decision_engine = DecisionEngine()
 
-        self.brief = MorningBrief()
         self.dashboard = DashboardRenderer()
+        self.brief = MorningBrief()
 
         # Shared Context
         self.context: dict = {}
 
     def initialize(self) -> None:
+        """Initialize application."""
 
         self.logger.info("Initialize System")
 
-    def load_data(self) -> None:
-        """Load Market Data"""
+    def load_market_data(self) -> None:
+        """Load market data."""
 
-        print("[2/5] Load Market Data")
+        print("[2/8] Load Market Data")
 
         market = self.market_loader.load()
 
@@ -67,16 +68,12 @@ class CIOEngine:
         print(f"SOX    : {market.sox}")
         print(f"VIX    : {market.vix}")
 
-    def analyze(self) -> None:
-        """Analyze Market"""
+    def analyze_market(self) -> None:
+        """Run market analyzers."""
 
-        print("[3/5] Analyze")
+        print("[3/8] Market Analyze")
 
         market = self.context["market"]
-
-        # -------------------------
-        # Analyzer
-        # -------------------------
 
         macro_score = self.macro_analyzer.analyze(market)
         market_score = self.market_analyzer.analyze(market)
@@ -85,32 +82,45 @@ class CIOEngine:
         news_score = self.news_analyzer.analyze(news_list)
 
         self.context["news"] = news_list
+        self.context["macro_score"] = macro_score
+        self.context["market_score"] = market_score
+        self.context["news_score"] = news_score
 
-        # -------------------------
-        # Score
-        # -------------------------
+    def calculate_score(self) -> None:
+        """Calculate integrated market score."""
+
+        print("[4/8] Score Calculate")
 
         score = self.score_engine.calculate(
-            macro=macro_score,
-            market=market_score,
-            news=news_score,
+            macro=self.context["macro_score"],
+            market=self.context["market_score"],
+            news=self.context["news_score"],
         )
 
         self.context["score"] = score
 
-        # -------------------------
-        # Decision
-        # -------------------------
+    def make_market_decision(self) -> None:
+        """Generate market decision."""
 
-        decision = self.decision_engine.make_decision(score)
+        print("[5/8] Market Decision")
+
+        decision = self.decision_engine.make_decision(
+            self.context["score"],
+        )
 
         self.context["decision"] = decision
-        
 
-    def show_dashboard(self) -> None:
-        """Display Dashboard"""
+    def run_portfolio_pipeline(self) -> None:
+        """Portfolio pipeline (Stub)."""
 
-        print("[4/5] Dashboard")
+        print("[6/8] Portfolio Pipeline (Stub)")
+
+        self.context["portfolio"] = None
+
+    def render_dashboard(self) -> None:
+        """Render dashboard."""
+
+        print("[7/8] Dashboard")
 
         dashboard = self.dashboard.render(
             self.context["market"],
@@ -119,13 +129,15 @@ class CIOEngine:
             self.context["news"],
         )
 
+        self.context["dashboard"] = dashboard
+
         print()
         print(dashboard)
 
-    def generate_reports(self) -> None:
-        """Generate Morning Brief"""
+    def generate_morning_brief(self) -> None:
+        """Generate morning brief."""
 
-        print("[5/6] Generate Reports")
+        print("[8/8] Morning Brief")
 
         report = self.brief.generate(
             self.context["market"],
@@ -139,6 +151,7 @@ class CIOEngine:
         print(f"Report Saved : {report}")
 
     def ready(self) -> None:
+        """Application ready."""
 
         self.logger.info("System Ready")
 
@@ -152,8 +165,8 @@ class CIOEngine:
 
         print("=" * 60)
 
-    def start(self) -> None:
-        """Start Application"""
+    def run(self) -> None:
+        """Official application entry point."""
 
         print("=" * 60)
         print("📈 STOCK-CIO")
@@ -163,8 +176,16 @@ class CIOEngine:
         print("=" * 60)
 
         self.initialize()
-        self.load_data()
-        self.analyze()
-        self.show_dashboard()
-        self.generate_reports()
+        self.load_market_data()
+        self.analyze_market()
+        self.calculate_score()
+        self.make_market_decision()
+        self.run_portfolio_pipeline()
+        self.render_dashboard()
+        self.generate_morning_brief()
         self.ready()
+
+    def start(self) -> None:
+        """Backward compatible entry point."""
+
+        self.run()

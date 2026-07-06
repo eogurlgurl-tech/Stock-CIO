@@ -9,7 +9,7 @@ from dataclasses import dataclass, field
 
 @dataclass(slots=True)
 class CIODecision:
-    """최종 투자 의사결정 모델"""
+    """Final CIO investment decision model."""
 
     market_status: str = "NEUTRAL"
 

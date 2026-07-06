@@ -4,14 +4,14 @@ Dashboard Renderer
 Stock-CIO
 """
 
-from src.models.market_snapshot import MarketSnapshot
-from src.models.score import Score
 from src.models.cio_decision import CIODecision
+from src.models.market_snapshot import MarketSnapshot
 from src.models.news import News
+from src.models.score import Score
 
 
 class DashboardRenderer:
-    """Console Dashboard Renderer"""
+    """Console Dashboard Renderer."""
 
     def render(
         self,
@@ -20,33 +20,17 @@ class DashboardRenderer:
         decision: CIODecision,
         news_list: list[News],
     ) -> str:
-        """Dashboard 문자열 생성"""
+        """Render dashboard."""
 
-        # -------------------------
-        # Watch List
-        # -------------------------
+        watch_list = self._render_watch_list(
+            decision.watch_list,
+        )
 
-        if decision.watch_list:
-            watch_list = "\n".join(
-                f"• {item}"
-                for item in decision.watch_list
-            )
-        else:
-            watch_list = "• No Watch List"
+        headlines = self._render_news(
+            news_list,
+        )
 
-        # -------------------------
-        # News
-        # -------------------------
-
-        if news_list:
-            headlines = "\n".join(
-                f"• {news.title}"
-                for news in news_list[:5]
-            )
-        else:
-            headlines = "• No News"
-
-        dashboard = f"""
+        return f"""
 ============================================================
                     STOCK-CIO DASHBOARD
 ============================================================
@@ -73,7 +57,7 @@ TOTAL SCORE    {score.total:.2f}
 GRADE          {score.grade}
 RATING         {score.stars}
 
-🎯 DECISION
+🎯 MARKET DECISION
 ------------------------------------------------------------
 STATUS         {decision.market_status}
 ACTION         {decision.action}
@@ -95,6 +79,30 @@ STOCK          {decision.stock_ratio}%
 {headlines}
 
 ============================================================
-"""
+""".strip()
 
-        return dashboard.strip()
+    def _render_watch_list(
+        self,
+        watch_list: list[str],
+    ) -> str:
+
+        if not watch_list:
+            return "• No Watch List"
+
+        return "\n".join(
+            f"• {item}"
+            for item in watch_list
+        )
+
+    def _render_news(
+        self,
+        news_list: list[News],
+    ) -> str:
+
+        if not news_list:
+            return "• No News"
+
+        return "\n".join(
+            f"• {news.title}"
+            for news in news_list[:5]
+        )

@@ -8,9 +8,10 @@ from src.core.cio_engine import CIOEngine
 
 
 def main() -> int:
+    """Application entry point."""
 
     engine = CIOEngine()
-    engine.start()
+    engine.run()
 
     return 0
 

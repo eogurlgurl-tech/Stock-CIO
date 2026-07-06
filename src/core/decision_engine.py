@@ -10,29 +10,41 @@ from src.models.score import Score
 
 
 class DecisionEngine:
-    """Score를 CIO 투자 의사결정으로 변환"""
+    """Convert market score into market decision."""
 
-    def __init__(self):
+    def __init__(self) -> None:
 
         self.screener = StockScreener()
 
     def make_decision(self, score: Score) -> CIODecision:
+        """Create market decision from integrated score."""
 
         decision = CIODecision()
 
         screen = self.screener.screen(score)
 
-        total = score.total
+        self._evaluate_market(score, decision)
+        self._evaluate_risk(score, decision)
 
-        # ==========================================================
-        # Market Status
-        # ==========================================================
+        decision.top_sectors = screen.top_sectors
+        decision.watch_list = screen.watch_list
+
+        decision.summary = self._build_summary(score, decision)
+
+        return decision
+
+    def _evaluate_market(
+        self,
+        score: Score,
+        decision: CIODecision,
+    ) -> None:
+
+        total = score.total
 
         if total >= 90:
 
             decision.market_status = "VERY BULLISH"
             decision.action = "STRONG BUY"
-
             decision.cash_ratio = 5
             decision.stock_ratio = 95
 
@@ -40,7 +52,6 @@ class DecisionEngine:
 
             decision.market_status = "BULLISH"
             decision.action = "BUY"
-
             decision.cash_ratio = 20
             decision.stock_ratio = 80
 
@@ -48,7 +59,6 @@ class DecisionEngine:
 
             decision.market_status = "NEUTRAL"
             decision.action = "ACCUMULATE"
-
             decision.cash_ratio = 30
             decision.stock_ratio = 70
 
@@ -56,7 +66,6 @@ class DecisionEngine:
 
             decision.market_status = "NEUTRAL"
             decision.action = "HOLD"
-
             decision.cash_ratio = 40
             decision.stock_ratio = 60
 
@@ -64,7 +73,6 @@ class DecisionEngine:
 
             decision.market_status = "BEARISH"
             decision.action = "REDUCE"
-
             decision.cash_ratio = 60
             decision.stock_ratio = 40
 
@@ -72,13 +80,14 @@ class DecisionEngine:
 
             decision.market_status = "VERY BEARISH"
             decision.action = "DEFENSE"
-
             decision.cash_ratio = 80
             decision.stock_ratio = 20
 
-        # ==========================================================
-        # Risk
-        # ==========================================================
+    def _evaluate_risk(
+        self,
+        score: Score,
+        decision: CIODecision,
+    ) -> None:
 
         if score.risk >= 70:
             decision.risks.append("High Market Risk")
@@ -92,37 +101,32 @@ class DecisionEngine:
         if score.market < 50:
             decision.risks.append("Weak Market Momentum")
 
-        if total < 60:
+        if score.total < 60:
             decision.risks.append("Defensive Position Recommended")
 
         if not decision.risks:
             decision.risks.append("No Significant Risk")
 
-        # ==========================================================
-        # Stock Screener
-        # ==========================================================
+    def _build_summary(
+        self,
+        score: Score,
+        decision: CIODecision,
+    ) -> str:
 
-        decision.top_sectors = screen.top_sectors
-        decision.watch_list = screen.watch_list
-
-        # ==========================================================
-        # Summary
-        # ==========================================================
-
-        summary = []
-
-        summary.append(f"Overall Score : {total:.2f}")
-        summary.append(f"Market Status : {decision.market_status}")
-        summary.append(f"Recommended Action : {decision.action}")
-        summary.append(
-            f"Portfolio Allocation : Stock {decision.stock_ratio}% / Cash {decision.cash_ratio}%"
-        )
+        summary: list[str] = [
+            f"Overall Score : {score.total:.2f}",
+            f"Market Status : {decision.market_status}",
+            f"Recommended Action : {decision.action}",
+            (
+                f"Portfolio Allocation : "
+                f"Stock {decision.stock_ratio}% / "
+                f"Cash {decision.cash_ratio}%"
+            ),
+        ]
 
         if decision.risks[0] == "No Significant Risk":
             summary.append("Market risk remains manageable.")
         else:
             summary.append(f"Primary Risk : {decision.risks[0]}")
 
-        decision.summary = "\n".join(summary)
-
-        return decision
+        return "\n".join(summary)

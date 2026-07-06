@@ -8,30 +8,21 @@ from datetime import datetime
 from pathlib import Path
 
 from src.models.market_snapshot import MarketSnapshot
-from src.models.score import Score
 from src.models.cio_decision import CIODecision
 from src.models.news import News
+from src.models.score import Score
 
 
 class MorningBrief:
-    """아침 브리핑 생성"""
+    """Morning Brief Report Generator."""
+
+    VERSION = "v0.4.0-alpha"
 
     def _generate_global_summary(self, market: MarketSnapshot) -> str:
-        """Global Market Summary 생성"""
 
-        # NASDAQ
-        if market.nasdaq >= 0:
-            nasdaq_status = "Bullish"
-        else:
-            nasdaq_status = "Bearish"
+        nasdaq_status = "Bullish" if market.nasdaq >= 0 else "Bearish"
+        sp500_status = "Positive" if market.sp500 >= 0 else "Negative"
 
-        # S&P500
-        if market.sp500 >= 0:
-            sp500_status = "Positive"
-        else:
-            sp500_status = "Negative"
-
-        # VIX
         if market.vix < 20:
             vix_status = "Low Volatility"
         elif market.vix < 30:
@@ -39,21 +30,18 @@ class MorningBrief:
         else:
             vix_status = "High Volatility"
 
-        # Overall
         if (
             market.nasdaq >= 0
             and market.sp500 >= 0
             and market.vix < 20
         ):
             overall = "Risk-On"
-
         elif (
             market.nasdaq < 0
             and market.sp500 < 0
             and market.vix >= 30
         ):
             overall = "Risk-Off"
-
         else:
             overall = "Neutral"
 
@@ -65,16 +53,12 @@ class MorningBrief:
 | Overall | {overall} |"""
 
     def _generate_korea_summary(self, market: MarketSnapshot) -> str:
-        """Korea Market Summary 생성"""
 
         if market.kospi == 0 and market.kosdaq == 0:
-
             kospi = "N/A"
             kosdaq = "N/A"
             overall = "KRX Data Unavailable"
-
         else:
-
             kospi = f"{market.kospi:.2f}"
             kosdaq = f"{market.kosdaq:.2f}"
             overall = "Market Data Available"
@@ -89,14 +73,14 @@ class MorningBrief:
         self,
         news_list: list[News],
     ) -> str:
-        """News Summary 생성"""
 
         news_count = len(news_list)
 
-        if news_count == 0:
-            overall = "No News Available"
-        else:
-            overall = "News Data Available"
+        overall = (
+            "News Data Available"
+            if news_count
+            else "No News Available"
+        )
 
         return f"""| Item | Status |
 |------|--------|
@@ -107,16 +91,13 @@ class MorningBrief:
         self,
         score: Score,
     ) -> str:
-        """Risk Summary 생성"""
 
         if score.risk >= 80:
             overall = "High Risk"
             recommendation = "Reduce Stock Position"
-
         elif score.risk >= 50:
             overall = "Moderate Risk"
             recommendation = "Maintain Current Position"
-
         else:
             overall = "Low Risk"
             recommendation = "Normal Investment"
@@ -131,18 +112,14 @@ class MorningBrief:
         self,
         score: Score,
     ) -> str:
-        """Watch List 생성"""
 
         if score.market >= 70:
-
             sectors = [
                 ("AI", "Watch"),
                 ("Semiconductor", "Watch"),
                 ("Battery", "Neutral"),
             ]
-
         else:
-
             sectors = [
                 ("Dividend ETF", "Watch"),
                 ("Defense", "Watch"),
@@ -163,11 +140,9 @@ class MorningBrief:
         score: Score,
         decision: CIODecision,
     ) -> str:
-        """Today's CIO Comment 생성"""
 
-        comments = []
+        comments: list[str] = []
 
-        # Macro
         if score.macro >= 80:
             comments.append(
                 "- Global macro environment remains favorable."
@@ -181,7 +156,6 @@ class MorningBrief:
                 "- Macro environment remains cautious."
             )
 
-        # Total Score
         if score.total >= 80:
             comments.append(
                 "- Overall investment score is strong."
@@ -195,14 +169,17 @@ class MorningBrief:
                 "- Overall investment score remains weak."
             )
 
-        # Decision
         action = decision.action.lower()
 
         if "buy" in action:
             comments.append(
                 "- Consider increasing equity exposure."
             )
-        elif "sell" in action:
+        elif (
+            "reduce" in action
+            or "defense" in action
+            or "sell" in action
+        ):
             comments.append(
                 "- Maintain defensive allocation."
             )
@@ -232,20 +209,14 @@ class MorningBrief:
 
         report_path = report_dir / f"{today}.md"
 
-        # -------------------------
-        # News Section
-        # -------------------------
-
-        if news_list:
-
-            headlines = "\n".join(
+        headlines = (
+            "\n".join(
                 f"- {news.title}"
                 for news in news_list[:5]
             )
-
-        else:
-
-            headlines = "- No news available."
+            if news_list
+            else "- No news available."
+        )
 
         global_summary = self._generate_global_summary(market)
         korea_summary = self._generate_korea_summary(market)
@@ -333,15 +304,11 @@ class MorningBrief:
 
 # 👀 Watch List
 
-### Today's Watch List
-
 {watch_list}
 
 ---
 
 # ⚠ Risk Check
-
-### Risk Summary
 
 {risk_summary}
 
@@ -365,7 +332,7 @@ class MorningBrief:
 
 Generated by STOCK-CIO
 
-Version : v2.2.0-alpha
+Version : {self.VERSION}
 """
 
         report_path.write_text(report, encoding="utf-8")
