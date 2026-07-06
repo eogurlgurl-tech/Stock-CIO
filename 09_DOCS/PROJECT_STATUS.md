@@ -6,11 +6,11 @@ v0.4.0-alpha
 
 Sprint
 
-18
+19
 
 Status
 
-Completed
+MVP Completed
 
 Build
 
@@ -18,7 +18,7 @@ PASS
 
 Unit Test
 
-135 Passed
+149 Passed
 
 Regression
 
@@ -30,26 +30,28 @@ Zero
 
 FEATURE-026 Target Portfolio Pipeline
 
-- Current Portfolio weight calculation
-- TargetPortfolioBuilder
-- Allocation Strategy integration
-- RiskReport and Recommendation integration
-- RebalancePlan generation
-- Rebalancing Recommendation conversion
-- Portfolio Decision generation
-- Dashboard Portfolio section
-- MorningBrief Portfolio section
-- End-to-end Portfolio Pipeline tests
+- Current and Target Portfolio separation
+- Risk, Recommendation, Rebalancing, and Decision workflow
+- Dashboard and MorningBrief Portfolio output
+
+FEATURE-027 Portfolio Data Integration
+
+- YAML-based PortfolioLoader
+- Cash and Position validation
+- Configured Portfolio end-to-end workflow
+- Dashboard and MorningBrief output verification
 
 ---
 
-## Architecture Contract
+## MVP Completion Criteria
 
-- PortfolioOptimizer updates Current Portfolio weights directly.
-- TargetPortfolioBuilder creates a separate Target Portfolio.
-- RebalancingEngine compares Current and Target Portfolio.
-- CIOEngine owns workflow orchestration.
-- Existing public interfaces remain compatible.
+- Portfolio configuration is loaded.
+- Current weights are calculated.
+- Target Portfolio is generated.
+- Risk and recommendations are generated.
+- Rebalancing and Portfolio Decision are generated.
+- Results reach Dashboard and MorningBrief.
+- Full regression suite passes.
 
 ---
 
@@ -57,5 +59,5 @@ FEATURE-026 Target Portfolio Pipeline
 
 - Python 3.14.4
 - pytest 9.1.1
-- 135 Passed
+- 149 Passed
 - Regression Zero

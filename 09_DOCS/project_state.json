@@ -4,17 +4,16 @@
         "version": "v0.4.0-alpha"
     },
     "current": {
-        "sprint": 18,
-        "feature": "FEATURE-026 Target Portfolio Pipeline",
-        "phase": "Completed"
+        "sprint": 19,
+        "feature": "FEATURE-027 Portfolio Data Integration",
+        "phase": "MVP Completed"
     },
     "build": {
         "status": "PASS",
-        "tests": 135,
+        "tests": 149,
         "regression": "Zero"
     },
     "next": {
-        "sprint": 19,
-        "feature": "FEATURE-027 Portfolio Data Integration"
+        "phase": "Commit and Release Preparation"
     }
 }

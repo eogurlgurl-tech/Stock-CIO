@@ -63,10 +63,12 @@ Stock-CIO/
 |   |   `-- strategy.py
 |   `-- utils/
 `-- tests/
+    |-- test_configured_portfolio_end_to_end.py
     |-- test_complete_portfolio_pipeline.py
     |-- test_portfolio_output_integration.py
     |-- test_portfolio_outputs.py
     |-- test_portfolio_pipeline.py
+    |-- test_portfolio_loader.py
     |-- test_rebalancing_recommendation_from_plan.py
     |-- test_target_portfolio_builder.py
     `-- existing regression test modules
