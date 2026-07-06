@@ -38,24 +38,28 @@ class Portfolio:
     def cash_ratio(self) -> float:
         """현금 비중 (%)"""
 
-        if self.total_asset == 0:
+        total_asset = self.total_asset
+
+        if total_asset == 0:
             return 0.0
 
         return (
             self.cash
-            / self.total_asset
+            / total_asset
         ) * 100
 
     @property
     def stock_ratio(self) -> float:
         """주식 비중 (%)"""
 
-        if self.total_asset == 0:
+        total_asset = self.total_asset
+
+        if total_asset == 0:
             return 0.0
 
         return (
             self.stock_asset
-            / self.total_asset
+            / total_asset
         ) * 100
 
     @property

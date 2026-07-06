@@ -83,6 +83,11 @@ class DecisionEngine:
     ) -> str:
         """Build the decision reason."""
 
+        if not recommendations:
+            return (
+                "Portfolio analysis is not available."
+            )
+
         reasons: list[str] = []
 
         for item in recommendations:

@@ -1,105 +1,132 @@
-# STOCK-CIO
 
-## PROJECT_INFORMATION
+# PROJECT CONTEXT
 
-Project Name
-STOCK-CIO
+## Project
 
-Description
+Stock-CIO
+
 AI Chief Investment Officer
 
-Owner
-...
+---
 
-Created
-...
+## Source of Truth
+
+실제 프로젝트 코드가 Source of Truth이다.
+
+설계 문서보다 현재 코드를 우선한다.
+
+PROJECT_TREE.md의 구조를 기준으로 개발한다.
+
+---
+
+## Development Rules
+
+- Python 3.14
+- Clean Architecture
+- One Class = One File
+- Full-file Replacement Only
+- Regression Zero
+- Immutable Model
+- Business Logic → services
+- Workflow → core
+- Existing Interface First
+- Optional Parameter Only
+
+---
+
+## Layer Responsibilities
+
+core/
+Application Workflow
+
+services/
+Business Logic
+
+analyzers/
+Analysis
+
+collectors/
+External Data
+
+models/
+Immutable Models
+
+repositories/
+Repository
+
+reports/
+Report Generator
+
+dashboard/
+Dashboard
+
+strategies/
+Strategy Pattern
+
+storage/
+Persistence
+
+utils/
+Utilities
+
+---
+
+## Duplicate Class
+
+core.CIOEngine
+Application Orchestrator
+
+services.CIOEngine
+CIO Report Generator
+
+core.DecisionEngine
+Market Decision
+
+services.DecisionEngine
+Portfolio Decision
+
+---
+
+## Current Status
 
 Version
-v0.3.0-alpha
+v0.4.0-alpha
+
+Sprint
+17
+
+Build
+PASS
+
+Unit Test
+118 Passed
+
+Regression
+Zero
 
 ---
 
-## PROJECT_GOAL
+## Current Feature
 
-개인 AI CIO 구축
+FEATURE-025
+Portfolio Pipeline
 
-시장 분석
+Current Scope
 
-↓
+- PortfolioLoader
+- Portfolio Context
+- Dependency Injection
+- Skip Processing
+- Backward Compatibility
 
-종목 분석
-
-↓
-
-포트폴리오 관리
-
-↓
-
-매매 의사결정
+Target Portfolio Generation
+Not Implemented
 
 ---
 
-## CURRENT_STATUS
+## Reference
 
-Current Sprint
-
-Sprint 4
-
-Current Module
-
-Decision Engine
-
----
-
-## DIRECTORY_STRUCTURE
-
-(프로젝트 구조)
-
----
-
-## COMPLETED
-
-- Market Loader
-- Macro Analyzer
-- Morning Brief
-- Score Engine
-
----
-
-## CURRENT_TASK
-
-Decision Engine
-
----
-
-## NEXT_TASK
-
-Risk Analyzer
-
-Sector Analyzer
-
-Portfolio Optimizer
-
----
-
-## CODING_RULE
-
-Clean Architecture
-
-SOLID
-
-YAML Configuration
-
-No Temporary Code
-
----
-
-## RESUME_POINT
-
-현재 작업
-
-다음 작업
-
-수정 예정 파일
-
-예상 Commit
+PROJECT_TREE.md
+Architecture.md
+Roadmap.md
+NEXT_TASK.md

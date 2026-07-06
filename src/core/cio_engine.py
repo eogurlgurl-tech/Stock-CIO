@@ -12,6 +12,7 @@ from src.analyzers.news_analyzer import NewsAnalyzer
 from src.analyzers.score_engine import ScoreEngine
 from src.collectors.market_data_loader import MarketDataLoader
 from src.collectors.news_collector import NewsCollector
+from src.collectors.portfolio_loader import PortfolioLoader
 from src.core.decision_engine import DecisionEngine
 from src.dashboard.dashboard_renderer import DashboardRenderer
 from src.reports.morning_brief import MorningBrief
@@ -31,6 +32,7 @@ class CIOEngine:
 
         # Components
         self.market_loader = MarketDataLoader()
+        self.portfolio_loader = PortfolioLoader()
 
         self.macro_analyzer = MacroAnalyzer()
         self.market_analyzer = MarketAnalyzer()
@@ -111,11 +113,29 @@ class CIOEngine:
         self.context["decision"] = decision
 
     def run_portfolio_pipeline(self) -> None:
-        """Portfolio pipeline (Stub)."""
+        """
+        Execute portfolio pipeline.
 
-        print("[6/8] Portfolio Pipeline (Stub)")
+        FEATURE-025
+        Portfolio Context를 생성하고 PortfolioLoader를 통해
+        현재 Portfolio를 공급한다.
+        Target Portfolio 생성 및 Rebalancing은
+        향후 Feature에서 연결한다.
+        """
 
-        self.context["portfolio"] = None
+        print("[6/8] Portfolio Pipeline")
+
+        portfolio = self.portfolio_loader.load()
+
+        portfolio_context = {
+            "portfolio": portfolio,
+            "analysis": None,
+            "recommendation": None,
+            "rebalancing": None,
+            "decision": None,
+        }
+
+        self.context["portfolio"] = portfolio_context
 
     def render_dashboard(self) -> None:
         """Render dashboard."""

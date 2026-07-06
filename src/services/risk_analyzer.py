@@ -68,6 +68,9 @@ class RiskAnalyzer:
     ) -> float:
         """Largest position weight (%)"""
 
+        if portfolio.is_empty:
+            return 0.0
+
         if portfolio.stock_asset == 0:
             return 0.0
 

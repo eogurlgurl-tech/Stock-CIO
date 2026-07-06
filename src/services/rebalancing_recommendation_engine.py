@@ -62,6 +62,9 @@ class RebalancingRecommendationEngine:
                     ticker=position.ticker,
                     action=action,
                     current_weight=position.weight,
+                    # FEATURE-025:
+                    # Target Portfolio가 아직 존재하지 않으므로
+                    # 현재 비중을 유지한다.
                     target_weight=position.weight,
                     weight_difference=0.0,
                     reason=self._build_reason(

@@ -1,176 +1,71 @@
-# NEXT_TASK.md
 
-# STOCK-CIO
+# NEXT TASK
 
-## Next Development Task
+Version
 
-### Sprint
+v0.4.0-alpha
 
-**Sprint 17**
+Sprint
+
+17
 
 ---
 
-## Feature
+# Current Feature
 
-**FEATURE-025**
+FEATURE-025
 
 Portfolio Pipeline
 
----
+Status
 
-## Goal
-
-Implement the Portfolio Pipeline currently defined as a stub in the Application Orchestrator.
+In Progress
 
 ---
 
-## Background
+# Remaining Tasks
 
-FEATURE-024 completed the Application Orchestrator and established the end-to-end workflow.
+## High Priority
 
-The Portfolio Pipeline currently exists only as a placeholder and should become the bridge between market analysis and portfolio recommendation.
-
----
-
-## Scope
-
-### Core
-
-- Implement Portfolio Pipeline
-- Replace Stub implementation
-- Preserve existing workflow
-- Maintain shared context
-
-### Services
-
-- Connect Portfolio Analyzer
-- Connect Recommendation Engine
-- Connect Rebalancing Engine
-- Connect Decision Engine
-
-### Output
-
-Generate portfolio-related context for downstream components.
-
-Example:
-
-- Portfolio Analysis
-- Portfolio Recommendation
-- Rebalancing Recommendation
+- Portfolio Pipeline Integration
+- PortfolioLoader 활용
+- Portfolio Context 유지
+- Skip Processing 유지
+- Regression Test
 
 ---
 
-## Workflow
+## Deferred
 
-```text
-initialize
-    ↓
-load_market_data
-    ↓
-analyze_market
-    ↓
-calculate_score
-    ↓
-make_market_decision
-    ↓
-portfolio_pipeline
-        ├── Portfolio Analysis
-        ├── Recommendation
-        ├── Rebalancing
-        └── Portfolio Decision
-    ↓
-render_dashboard
-    ↓
-generate_morning_brief
-    ↓
-ready
-```
+Target Portfolio Generation
+
+Reason
+
+현재 프로젝트 구조상 Target Portfolio 생성 계층이 존재하지 않음.
+
+RebalancingEngine(create_plan(current, target))은
+Target Portfolio 구현 이후 연결한다.
 
 ---
 
-## Constraints
+# Sprint 18 Candidate
 
-- Python 3.14
-- Clean Architecture
-- One Class = One File
+FEATURE-026
+
+Target Portfolio Generator
+
+Planned Scope
+
+- Target Portfolio 생성
+- Allocation Strategy 연동
+- Recommendation 연계
+- RebalancingEngine 연결
+
+---
+
+# Development Rules
+
 - Full-file Replacement Only
-- Business Logic in services
-- Workflow in core
-- Immutable Model
 - Regression Zero
-
----
-
-## Expected Result
-
-- Portfolio Pipeline implemented
-- Existing workflow preserved
-- Existing tests continue to pass
-- No regression introduced
-- Ready for future CIO integrati
-
-# STOCK-CIO Next Task
-
-Version : v0.4.0-alpha
-
----
-
-## Current Status
-
-Sprint 15 Completed
-
-Build PASS
-
-118 Passed
-
-Regression Zero
-
-Sprint 16 Architecture Completed
-
----
-
-## Next Sprint
-
-Sprint 16
-
-FEATURE-024
-
-Application Orchestrator
-
-Priority
-
-Highest
-
----
-
-## Goal
-
-Connect all existing engines through src/core/cio_engine.py and execute the complete investment workflow using:
-
-```bash
-python main.py
-```
-
----
-
-## Development Order
-
-1. Review Risk Analyzer
-2. Review Recommendation Engine
-3. Review Decision Engine
-4. Review AI CIO Engine
-5. Full-file Replacement of src/core/cio_engine.py
-6. pytest
-7. Document Update
-8. Git Commit
-
----
-
-## Success Criteria
-
-* Build PASS
-* 118 Unit Tests Passed
-* Regression Zero
-* Existing Architecture Preserved
-* Full-file Replacement Only
-* Production Quality
+- Existing Interface First
+- Clean Architecture

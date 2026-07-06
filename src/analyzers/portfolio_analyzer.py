@@ -13,6 +13,9 @@ class PortfolioAnalyzer:
     def analyze(self, portfolio: Portfolio) -> float:
         """Portfolio Score 계산"""
 
+        if portfolio.is_empty:
+            return 0.0
+
         score = 0.0
 
         # ==========================

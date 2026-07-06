@@ -34,25 +34,30 @@ class RecommendationEngine:
 
         items: list[str] = []
 
-        self._evaluate_concentration(
-            risk_report,
-            items,
-        )
+        if portfolio.is_empty:
+            items.append(
+                "No portfolio positions available."
+            )
+        else:
+            self._evaluate_concentration(
+                risk_report,
+                items,
+            )
 
-        self._evaluate_diversification(
-            risk_report,
-            items,
-        )
+            self._evaluate_diversification(
+                risk_report,
+                items,
+            )
 
-        self._evaluate_cash(
-            risk_report,
-            items,
-        )
+            self._evaluate_cash(
+                risk_report,
+                items,
+            )
 
-        self._evaluate_risk(
-            risk_report,
-            items,
-        )
+            self._evaluate_risk(
+                risk_report,
+                items,
+            )
 
         if not items:
             items.append(
