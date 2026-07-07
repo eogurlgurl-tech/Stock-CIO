@@ -31,6 +31,10 @@ class PortfolioDashboardRenderer:
             rebalancing_plan
         )
 
+        position_details = self._render_position_details(
+            portfolio,
+        )
+
         return f"""
 PORTFOLIO
 ------------------------------------------------------------
@@ -42,6 +46,7 @@ Risk Level      : {risk_report.risk_level.value}
 Decision        : {decision.decision.name}
 Rebalance Count : {rebalancing_plan.rebalance_count}
 
+{position_details}
 {final_section}
 
 ALLOCATION PLAN
@@ -64,6 +69,33 @@ ALLOCATION PLAN
             f"Final Action    : {decision.final_action}\n"
             f"Reason          : {decision.reason}"
         )
+
+    @staticmethod
+    def _render_position_details(
+        portfolio: Portfolio,
+    ) -> str:
+        """Render detailed portfolio position information."""
+
+        if not portfolio.positions:
+            return "No positions available."
+
+        header = (
+            "Ticker   Name                     Qty     Price        Value         P/L        P/L%"
+        )
+        rows = [header]
+
+        for position in portfolio.positions:
+            rows.append(
+                f"{position.ticker:<8} "
+                f"{(position.name[:20]):<22} "
+                f"{position.quantity:>5} "
+                f"{position.current_price:>12,.2f} "
+                f"{position.market_value:>13,.0f} "
+                f"{position.unrealized_profit:>11,.0f} "
+                f"{position.return_rate:>7.2f}%"
+            )
+
+        return "\n".join(rows)
 
     @staticmethod
     def _render_allocation_plan(

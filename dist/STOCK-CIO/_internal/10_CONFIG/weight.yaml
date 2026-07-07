@@ -1,0 +1,56 @@
+# ==========================================================
+# STOCK-CIO Weight Configuration
+# ==========================================================
+
+version: "2.0.0"
+
+weights:
+
+  macro: 0.20
+  market: 0.20
+  sector: 0.15
+  money_flow: 0.15
+  news: 0.10
+  portfolio: 0.10
+  risk: 0.10
+
+validation:
+
+  minimum: 0.0
+  maximum: 1.0
+
+enable:
+
+  macro: true
+  market: true
+  sector: true
+  money_flow: true
+  news: true
+  portfolio: true
+  risk: true
+
+description:
+
+  macro: "Macro Economy"
+  market: "Global Market"
+  sector: "Sector Strength"
+  money_flow: "Foreign & Institutional"
+  news: "News Impact"
+  portfolio: "Portfolio Status"
+  risk: "Risk Adjustment"
+
+score_range:
+
+  S: 90
+  A: 80
+  B: 70
+  C: 60
+  D: 0
+
+stars:
+
+  S: "★★★★★"
+  A: "★★★★☆"
+  B: "★★★☆☆"
+  C: "★★☆☆☆"
+  D: "★☆☆☆☆"

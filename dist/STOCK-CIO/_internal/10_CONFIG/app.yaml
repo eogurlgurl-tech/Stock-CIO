@@ -1,0 +1,18 @@
+app:
+  name: Stock-CIO
+  version: 0.1.0
+  language: ko
+  timezone: Asia/Seoul
+
+market:
+  default: KRX
+  us_market: true
+
+portfolio:
+  currency: KRW
+
+report:
+  output: 04_REPORT/DAILY
+
+logging:
+  level: INFO

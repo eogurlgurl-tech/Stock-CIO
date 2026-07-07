@@ -13,6 +13,7 @@ from tkinter import ttk
 from tkinter.scrolledtext import ScrolledText
 
 from src.core.cio_engine import CIOEngine
+from src.utils.translator import translate_text
 
 
 class StockCIOApp:
@@ -195,10 +196,37 @@ class StockCIOApp:
 
         translated = cls._remove_internal_context(output)
 
+        # Apply explicit static translations first for known tokens
         for source, target in cls.TRANSLATIONS:
             translated = translated.replace(source, target)
 
-        return translated
+        # Translate remaining English-only lines using online translator.
+        # Skip lines that already contain Korean to avoid double-translation.
+        lines: list[str] = []
+
+        import re
+
+        for line in translated.splitlines():
+            if not line.strip():
+                lines.append(line)
+                continue
+
+            # If line contains Korean, keep as-is
+            if any("\uac00" <= ch <= "\ud7a3" for ch in line):
+                lines.append(line)
+                continue
+
+            # If the line appears to be a data row (contains multiple numbers,
+            # percent signs, or large numeric tokens), skip translation to
+            # avoid altering numeric fields.
+            numeric_tokens = len(re.findall(r"\d+", line))
+            if numeric_tokens >= 2 or re.search(r"%", line):
+                lines.append(line)
+                continue
+
+            lines.append(translate_text(line))
+
+        return "\n".join(lines)
 
     @staticmethod
     def _remove_internal_context(output: str) -> str:

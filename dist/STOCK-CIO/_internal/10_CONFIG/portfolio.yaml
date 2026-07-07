@@ -1,0 +1,25 @@
+cash: 2033544.0
+positions:
+  - ticker: "005930"
+    name: "Samsung Electronics"
+    quantity: 15
+    average_price: 307700.0
+    current_price: 318000.0
+
+  - ticker: "373220"
+    name: "LG Energy Solution"
+    quantity: 1
+    average_price: 300000.0
+    current_price: 354000.0
+
+  - ticker: "360750"
+    name: "TIGER US S&P500"
+    quantity: 77
+    average_price: 27560.0
+    current_price: 28555.0
+
+  - ticker: "069500"
+    name: "KODEX 200"
+    quantity: 11
+    average_price: 120227.0
+    current_price: 130090.0
