@@ -75,13 +75,14 @@ ALLOCATION PLAN
             return "No portfolio positions available."
 
         header = (
-            "Ticker       Current   Target    Difference   Action"
+            "Ticker       Name                 Current   Target    Difference   Action"
         )
         rows = [header]
 
         for item in plan.items:
             rows.append(
                 f"{item.ticker:<12} "
+                f"{item.name:<20} "
                 f"{item.current_weight:>6.2f}%   "
                 f"{item.target_weight:>6.2f}%   "
                 f"{item.difference:>+8.2f}%p   "

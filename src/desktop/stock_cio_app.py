@@ -68,6 +68,7 @@ class StockCIOApp:
         ("Reason", "판단 근거"),
         ("ALLOCATION PLAN", "종목별 비중 계획"),
         ("Ticker", "종목코드"),
+        ("Name", "종목명"),
         ("Current", "현재 비중"),
         ("Target", "목표 비중"),
         ("Difference", "차이"),

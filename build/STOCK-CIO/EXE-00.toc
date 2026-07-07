@@ -1,4 +1,4 @@
-('d:\\3. 업무 (GitHub)\\Stock-CIO\\build\\STOCK-CIO\\STOCK-CIO.exe',
+('D:\\3. 업무 (GitHub)\\Stock-CIO\\build\\STOCK-CIO\\STOCK-CIO.exe',
  False,
  False,
  True,
@@ -29,28 +29,28 @@
  None,
  None,
  None,
- 'd:\\3. 업무 (GitHub)\\Stock-CIO\\build\\STOCK-CIO\\STOCK-CIO.pkg',
+ 'D:\\3. 업무 (GitHub)\\Stock-CIO\\build\\STOCK-CIO\\STOCK-CIO.pkg',
  [('pyi-contents-directory _internal', '', 'OPTION'),
   ('PYZ-00.pyz',
-   'd:\\3. 업무 (GitHub)\\Stock-CIO\\build\\STOCK-CIO\\PYZ-00.pyz',
+   'D:\\3. 업무 (GitHub)\\Stock-CIO\\build\\STOCK-CIO\\PYZ-00.pyz',
    'PYZ'),
   ('struct',
-   'd:\\3. 업무 (GitHub)\\Stock-CIO\\build\\STOCK-CIO\\localpycs\\struct.pyc',
+   'D:\\3. 업무 (GitHub)\\Stock-CIO\\build\\STOCK-CIO\\localpycs\\struct.pyc',
    'PYMODULE'),
   ('pyimod01_archive',
-   'd:\\3. 업무 '
+   'D:\\3. 업무 '
    '(GitHub)\\Stock-CIO\\build\\STOCK-CIO\\localpycs\\pyimod01_archive.pyc',
    'PYMODULE'),
   ('pyimod02_importers',
-   'd:\\3. 업무 '
+   'D:\\3. 업무 '
    '(GitHub)\\Stock-CIO\\build\\STOCK-CIO\\localpycs\\pyimod02_importers.pyc',
    'PYMODULE'),
   ('pyimod03_ctypes',
-   'd:\\3. 업무 '
+   'D:\\3. 업무 '
    '(GitHub)\\Stock-CIO\\build\\STOCK-CIO\\localpycs\\pyimod03_ctypes.pyc',
    'PYMODULE'),
   ('pyimod04_pywin32',
-   'd:\\3. 업무 '
+   'D:\\3. 업무 '
    '(GitHub)\\Stock-CIO\\build\\STOCK-CIO\\localpycs\\pyimod04_pywin32.pyc',
    'PYMODULE'),
   ('pyiboot01_bootstrap',
@@ -83,7 +83,7 @@
  [],
  False,
  False,
- 1783383137,
+ 1783390196,
  [('runw.exe',
    'C:\\Users\\DHLIM\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\PyInstaller\\bootloader\\Windows-64bit-intel\\runw.exe',
    'EXECUTABLE')],
