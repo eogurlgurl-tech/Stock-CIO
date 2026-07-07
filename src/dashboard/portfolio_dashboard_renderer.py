@@ -80,7 +80,7 @@ ALLOCATION PLAN
             return "No positions available."
 
         header = (
-            "Ticker   Name                     Qty     Price        Value         P/L        P/L%"
+            "Ticker   Name                     Qty     Price (src@time)    Value         P/L        P/L%"
         )
         rows = [header]
 
@@ -89,7 +89,9 @@ ALLOCATION PLAN
                 f"{position.ticker:<8} "
                 f"{(position.name[:20]):<22} "
                 f"{position.quantity:>5} "
+                # show price with source and time if available
                 f"{position.current_price:>12,.2f} "
+                f"({position.price_source or 'src'}@{(position.price_timestamp[-8:]) if position.price_timestamp else '--:--'}) "
                 f"{position.market_value:>13,.0f} "
                 f"{position.unrealized_profit:>11,.0f} "
                 f"{position.return_rate:>7.2f}%"

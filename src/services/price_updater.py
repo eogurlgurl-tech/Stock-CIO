@@ -10,7 +10,7 @@ from typing import Optional
 import yfinance as yf
 
 
-def _try_yfinance_price(ticker: str) -> Optional[float]:
+def _try_yfinance_price(ticker: str) -> tuple[Optional[float], str | None]:
     """Try to fetch price from Yahoo Finance. Accepts raw ticker and attempts
     common KRX suffixes if needed."""
 
@@ -28,18 +28,25 @@ def _try_yfinance_price(ticker: str) -> Optional[float]:
                 continue
 
             price = float(frame["Close"].iloc[-1])
-            return price
+            # timestamp from index if available
+            try:
+                ts = frame.index[-1]
+                ts_str = getattr(ts, 'strftime', lambda fmt: str(ts))("%Y-%m-%d %H:%M:%S")
+            except Exception:
+                ts_str = None
+
+            return price, ts_str
         except Exception:
             continue
 
     return None
+    return None, None
 
 
-def _try_pykrx_price(ticker: str) -> Optional[float]:
+def _try_pykrx_price(ticker: str) -> tuple[Optional[float], str | None]:
     """Try to fetch price from pykrx for 6-digit KRX tickers."""
-
     if not (ticker.isdigit() and len(ticker) == 6):
-        return None
+        return None, None
 
     try:
         from pykrx import stock
@@ -51,12 +58,19 @@ def _try_pykrx_price(ticker: str) -> Optional[float]:
         frame = stock.get_market_ohlcv_by_date(from_date, to_date, ticker)
 
         if frame is None or frame.empty:
-            return None
+            return None, None
 
         price = float(frame["종가"].iloc[-1])
-        return price
+        # pykrx returns dates as index; try to extract last date
+        try:
+            last_date = frame.index[-1]
+            ts_str = getattr(last_date, 'strftime', lambda fmt: str(last_date))("%Y-%m-%d %H:%M:%S")
+        except Exception:
+            ts_str = None
+
+        return price, ts_str
     except Exception:
-        return None
+        return None, None
 
 
 def update_portfolio_prices(portfolio) -> None:
@@ -71,15 +85,29 @@ def update_portfolio_prices(portfolio) -> None:
 
         if not isinstance(ticker, str) or not ticker:
             continue
+        # Prefer pykrx for Korean 6-digit tickers
+        price = None
+        source = None
+        ts = None
 
-        price = _try_yfinance_price(ticker)
+        if ticker.isdigit() and len(ticker) == 6:
+            p, p_ts = _try_pykrx_price(ticker)
+            if p is not None:
+                price = p
+                source = "pykrx"
+                ts = p_ts
 
         if price is None:
-            price = _try_pykrx_price(ticker)
+            p, p_ts = _try_yfinance_price(ticker)
+            if p is not None:
+                price = p
+                source = "yfinance"
+                ts = p_ts
 
         if price is not None:
             try:
                 position.current_price = float(price)
+                position.price_source = source or ""
+                position.price_timestamp = ts or ""
             except Exception:
-                # ignore assignment errors
                 continue

@@ -22,6 +22,9 @@ class Position:
     current_price: float = 0.0
 
     weight: float = 0.0
+    # price metadata
+    price_source: str = ""
+    price_timestamp: str = ""
 
     @property
     def cost_basis(self) -> float:
