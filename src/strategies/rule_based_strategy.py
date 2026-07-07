@@ -2,8 +2,6 @@
 Rule Based Strategy
 
 Stock-CIO
-
-Generates a target portfolio using predefined allocation rules.
 """
 
 from __future__ import annotations
@@ -15,7 +13,7 @@ from .allocation_strategy import AllocationStrategy
 
 
 class RuleBasedStrategy(AllocationStrategy):
-    """Rule-based portfolio allocation strategy."""
+    """Create target weights with a maximum position limit."""
 
     MAX_WEIGHT = 30.0
 
@@ -23,20 +21,20 @@ class RuleBasedStrategy(AllocationStrategy):
         self,
         portfolio: Portfolio,
     ) -> Portfolio:
-        """
-        Create target allocation.
-
-        Rules
-        -----
-        1. Limit maximum position weight.
-        2. Redistribute excess weight.
-        """
+        """Create a separate target allocation."""
 
         target = self._clone(portfolio)
 
+        if target.is_empty:
+            return target
+
+        if len(target.positions) * self.MAX_WEIGHT < 100.0:
+            self._apply_equal_weight(target)
+            return target
+
         self._calculate_weights(target)
         self._apply_max_weight(target)
-        self._normalize(target)
+        self._finalize_weights(target)
 
         return target
 
@@ -44,7 +42,7 @@ class RuleBasedStrategy(AllocationStrategy):
     def _clone(
         portfolio: Portfolio,
     ) -> Portfolio:
-        """Clone portfolio."""
+        """Clone portfolio and positions."""
 
         return Portfolio(
             cash=portfolio.cash,
@@ -65,7 +63,7 @@ class RuleBasedStrategy(AllocationStrategy):
     def _calculate_weights(
         portfolio: Portfolio,
     ) -> None:
-        """Calculate current weights."""
+        """Calculate unrounded stock allocation weights."""
 
         total = portfolio.stock_asset
 
@@ -73,63 +71,104 @@ class RuleBasedStrategy(AllocationStrategy):
             return
 
         for position in portfolio.positions:
-            position.weight = round(
-                position.market_value / total * 100,
-                2,
+            position.weight = (
+                position.market_value / total * 100.0
             )
 
     def _apply_max_weight(
         self,
         portfolio: Portfolio,
     ) -> None:
-        """Apply maximum weight rule."""
+        """Cap and redistribute weights until all satisfy the limit."""
 
-        excess = 0.0
-        candidates: list[Position] = []
+        capped: set[int] = set()
 
-        for position in portfolio.positions:
-
-            if position.weight > self.MAX_WEIGHT:
-
-                excess += (
-                    position.weight
-                    - self.MAX_WEIGHT
+        while True:
+            exceeded = [
+                index
+                for index, position in enumerate(
+                    portfolio.positions
                 )
+                if (
+                    index not in capped
+                    and position.weight > self.MAX_WEIGHT
+                )
+            ]
 
+            if not exceeded:
+                return
+
+            excess = 0.0
+
+            for index in exceeded:
+                position = portfolio.positions[index]
+                excess += position.weight - self.MAX_WEIGHT
                 position.weight = self.MAX_WEIGHT
+                capped.add(index)
 
-            else:
-                candidates.append(position)
+            candidates = [
+                position
+                for index, position in enumerate(
+                    portfolio.positions
+                )
+                if index not in capped
+            ]
 
-        if excess <= 0:
-            return
+            if not candidates:
+                return
 
-        if not candidates:
-            return
+            share = excess / len(candidates)
 
-        share = excess / len(candidates)
-
-        for position in candidates:
-            position.weight += share
+            for position in candidates:
+                position.weight += share
 
     @staticmethod
-    def _normalize(
+    def _apply_equal_weight(
         portfolio: Portfolio,
     ) -> None:
-        """Normalize total weight to 100%."""
+        """Apply equal weights when the configured cap is infeasible."""
 
-        total = sum(
-            position.weight
-            for position in portfolio.positions
-        )
+        count = len(portfolio.positions)
 
-        if total <= 0:
+        if count == 0:
             return
 
-        ratio = 100.0 / total
+        weight = 100.0 / count
 
         for position in portfolio.positions:
-            position.weight = round(
-                position.weight * ratio,
-                2,
-            )
+            position.weight = weight
+
+        RuleBasedStrategy._finalize_weights(portfolio)
+
+    @staticmethod
+    def _finalize_weights(
+        portfolio: Portfolio,
+    ) -> None:
+        """Round weights while keeping the total at 100%."""
+
+        if portfolio.is_empty:
+            return
+
+        for position in portfolio.positions:
+            position.weight = round(position.weight, 2)
+
+        difference = round(
+            100.0
+            - sum(
+                position.weight
+                for position in portfolio.positions
+            ),
+            2,
+        )
+
+        if difference == 0:
+            return
+
+        candidate = min(
+            portfolio.positions,
+            key=lambda position: position.weight,
+        )
+        candidate.weight = round(
+            candidate.weight + difference,
+            2,
+        )

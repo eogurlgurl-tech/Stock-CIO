@@ -2,62 +2,56 @@
 
 Version
 
-v0.4.0-alpha
+v1.0.0-rc
 
 Sprint
 
-19
+20
 
 Status
 
-MVP Completed
+V1 Stabilization - Verified
 
 Build
 
-PASS
+Completed
 
-Unit Test
+Regression Baseline
 
-149 Passed
+172 Passed
 
-Regression
+Expected Test Collection
 
-Zero
-
----
-
-## Completed
-
-FEATURE-026 Target Portfolio Pipeline
-
-- Current and Target Portfolio separation
-- Risk, Recommendation, Rebalancing, and Decision workflow
-- Dashboard and MorningBrief Portfolio output
-
-FEATURE-027 Portfolio Data Integration
-
-- YAML-based PortfolioLoader
-- Cash and Position validation
-- Configured Portfolio end-to-end workflow
-- Dashboard and MorningBrief output verification
+172 Tests
 
 ---
 
-## MVP Completion Criteria
+## V1 Required Improvements
 
-- Portfolio configuration is loaded.
-- Current weights are calculated.
-- Target Portfolio is generated.
-- Risk and recommendations are generated.
-- Rebalancing and Portfolio Decision are generated.
-- Results reach Dashboard and MorningBrief.
-- Full regression suite passes.
+Completed in code
+
+- Repeated maximum-weight redistribution
+- 1.0%p rebalancing tolerance
+- Unified market and portfolio decision
+- Current and target allocation output
+- Final decision reason output
+- Market and news data collection status
+- Korean desktop output
+- Yahoo Finance market news collection
+
+Completed
+
+- Full pytest verification
+- Windows EXE rebuild
+- Packaged application verification
+- Version release confirmation
 
 ---
 
-## Verification
+## Architecture Contract
 
-- Python 3.14.4
-- pytest 9.1.1
-- 149 Passed
-- Regression Zero
+- PortfolioOptimizer calculates Current Portfolio weights.
+- TargetPortfolioBuilder creates a separate Target Portfolio.
+- RebalancingEngine applies tolerance without changing inputs.
+- UnifiedDecisionEngine combines market and portfolio actions.
+- CIOEngine owns workflow orchestration.

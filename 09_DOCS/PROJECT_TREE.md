@@ -33,6 +33,7 @@ Stock-CIO/
 |   |   |-- dashboard_renderer.py
 |   |   `-- portfolio_dashboard_renderer.py
 |   |-- models/
+|   |   |-- unified_decision.py
 |   |   |-- portfolio.py
 |   |   |-- position.py
 |   |   |-- rebalance_item.py
@@ -46,6 +47,7 @@ Stock-CIO/
 |   |-- repositories/
 |   |-- scripts/
 |   |-- services/
+|   |   |-- unified_decision_engine.py
 |   |   |-- cio_engine.py
 |   |   |-- decision_engine.py
 |   |   |-- rebalancing_engine.py
@@ -63,6 +65,11 @@ Stock-CIO/
 |   |   `-- strategy.py
 |   `-- utils/
 `-- tests/
+    |-- test_dashboard_data_status.py
+    |-- test_portfolio_allocation_output.py
+    |-- test_rebalancing_tolerance.py
+    |-- test_rule_based_strategy_limits.py
+    |-- test_unified_decision_engine.py
     |-- test_configured_portfolio_end_to_end.py
     |-- test_complete_portfolio_pipeline.py
     |-- test_portfolio_output_integration.py

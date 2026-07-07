@@ -11,39 +11,52 @@ from src.models.rebalance_plan import RebalancePlan
 
 
 class RebalancingEngine:
-    """Portfolio Rebalancing Engine"""
+    """Compare current and target portfolio weights."""
+
+    DEFAULT_TOLERANCE = 1.0
+
+    def __init__(
+        self,
+        tolerance: float = DEFAULT_TOLERANCE,
+    ) -> None:
+        """Initialize with an absolute weight tolerance in %p."""
+
+        if tolerance < 0:
+            raise ValueError(
+                "Rebalancing tolerance must be non-negative."
+            )
+
+        self._tolerance = tolerance
+
+    @property
+    def tolerance(self) -> float:
+        """Return the current rebalance tolerance."""
+
+        return self._tolerance
 
     def create_plan(
         self,
         current: Portfolio,
         target: Portfolio,
     ) -> RebalancePlan:
-        """
-        Compare current portfolio with target portfolio
-        and create a rebalancing plan.
-        """
+        """Compare current and target and create a plan."""
 
         plan = RebalancePlan()
-
         current_map = {
             position.ticker: position
             for position in current.positions
         }
-
         target_map = {
             position.ticker: position
             for position in target.positions
         }
 
-        # 현재 보유 종목 기준
         for current_position in current.positions:
-
             target_position = target_map.get(
                 current_position.ticker
             )
 
             if target_position is None:
-
                 plan.add_item(
                     RebalanceItem(
                         ticker=current_position.ticker,
@@ -53,17 +66,19 @@ class RebalancingEngine:
                         action=RebalanceAction.SELL,
                     )
                 )
-
                 continue
 
-            if current_position.weight < target_position.weight:
-                action = RebalanceAction.BUY
+            difference = (
+                target_position.weight
+                - current_position.weight
+            )
 
-            elif current_position.weight > target_position.weight:
-                action = RebalanceAction.SELL
-
-            else:
+            if abs(difference) < self._tolerance:
                 action = RebalanceAction.HOLD
+            elif difference > 0:
+                action = RebalanceAction.BUY
+            else:
+                action = RebalanceAction.SELL
 
             plan.add_item(
                 RebalanceItem(
@@ -75,11 +90,15 @@ class RebalancingEngine:
                 )
             )
 
-        # 신규 편입 종목
         for target_position in target.positions:
-
             if target_position.ticker in current_map:
                 continue
+
+            action = (
+                RebalanceAction.BUY
+                if target_position.weight >= self._tolerance
+                else RebalanceAction.HOLD
+            )
 
             plan.add_item(
                 RebalanceItem(
@@ -87,7 +106,7 @@ class RebalancingEngine:
                     name=target_position.name,
                     current_weight=0.0,
                     target_weight=target_position.weight,
-                    action=RebalanceAction.BUY,
+                    action=action,
                 )
             )
 

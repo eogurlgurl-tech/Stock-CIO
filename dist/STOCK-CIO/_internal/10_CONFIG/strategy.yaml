@@ -1,0 +1,86 @@
+# ==========================================================
+# STOCK-CIO Strategy Configuration
+# Version : v1.0.0
+# ==========================================================
+
+version: "1.0.0"
+
+# ==========================================================
+# Investment Decision Score
+# ==========================================================
+
+decision:
+
+  strong_buy: 90
+
+  buy: 80
+
+  watch: 65
+
+  reduce: 50
+
+  sell: 35
+
+# ==========================================================
+# Portfolio Management
+# ==========================================================
+
+portfolio:
+
+  max_position: 20
+
+  initial_position: 10
+
+  add_position: 5
+
+  cash_reserve: 20
+
+# ==========================================================
+# Risk Management
+# ==========================================================
+
+risk:
+
+  max_loss: 5
+
+  warning_loss: 3
+
+  target_profit: 15
+
+  partial_profit: 8
+
+# ==========================================================
+# Position Rule
+# ==========================================================
+
+position:
+
+  allow_additional_buy: true
+
+  allow_partial_sell: true
+
+  allow_full_sell: true
+
+# ==========================================================
+# Alert Rule
+# ==========================================================
+
+alert:
+
+  score_change: 10
+
+  risk_change: 15
+
+# ==========================================================
+# Report Rule
+# ==========================================================
+
+report:
+
+  include_reason: true
+
+  include_target_price: true
+
+  include_stop_loss: true
+
+  include_position_size: true

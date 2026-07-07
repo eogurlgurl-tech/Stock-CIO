@@ -2,6 +2,35 @@
 
 ---
 
+## v1.0.0-rc
+
+### Sprint 20 - V1 Stabilization
+
+Added
+
+- UnifiedDecision model and engine
+- Rebalancing tolerance
+- Current and target allocation output
+- Data collection status output
+- Korean desktop decision output
+- Live market news collection
+
+Fixed
+
+- Maximum position weight could be exceeded after redistribution
+- Missing score categories incorrectly reduced total score
+- pykrx index collection failure through Yahoo fallback
+- Internal Context keys exposed to desktop users
+- Conflicting market and portfolio actions lacked a final decision
+
+Status
+
+- Verification Complete
+- Current baseline: 172 Passed
+- Package verified: dist\STOCK-CIO\STOCK-CIO.exe
+
+---
+
 ## v0.4.0-alpha
 
 ### Sprint 19

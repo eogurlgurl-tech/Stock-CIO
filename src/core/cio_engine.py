@@ -19,6 +19,7 @@ from src.dashboard.dashboard_renderer import DashboardRenderer
 from src.dashboard.portfolio_dashboard_renderer import (
     PortfolioDashboardRenderer,
 )
+from src.models.cio_decision import CIODecision
 from src.reports.morning_brief import MorningBrief
 from src.reports.portfolio_morning_brief_appender import (
     PortfolioMorningBriefAppender,
@@ -35,13 +36,16 @@ from src.services.risk_analyzer import RiskAnalyzer
 from src.services.target_portfolio_builder import (
     TargetPortfolioBuilder,
 )
+from src.services.unified_decision_engine import (
+    UnifiedDecisionEngine,
+)
 from src.utils.logger import Logger
 
 
 class CIOEngine:
     """Application Orchestrator."""
 
-    VERSION = "v0.4.0-alpha"
+    VERSION = "v1.0.0-rc"
 
     def __init__(self) -> None:
         self.started_at = datetime.now()
@@ -67,6 +71,7 @@ class CIOEngine:
             RebalancingRecommendationEngine()
         )
         self.portfolio_decision_engine = PortfolioDecisionEngine()
+        self.unified_decision_engine = UnifiedDecisionEngine()
 
         self.dashboard = DashboardRenderer()
         self.portfolio_dashboard = PortfolioDashboardRenderer()
@@ -171,6 +176,16 @@ class CIOEngine:
             )
         )
 
+        market_decision = self.context.get("decision")
+
+        if not isinstance(market_decision, CIODecision):
+            market_decision = CIODecision()
+
+        unified_decision = self.unified_decision_engine.generate(
+            market_decision,
+            portfolio_decision,
+        )
+
         self.context["portfolio"] = {
             "portfolio": portfolio,
             "target": target,
@@ -181,6 +196,7 @@ class CIOEngine:
                 rebalancing_recommendations
             ),
             "decision": portfolio_decision,
+            "unified_decision": unified_decision,
         }
 
     def render_dashboard(self) -> None:
@@ -201,6 +217,7 @@ class CIOEngine:
             portfolio_context["analysis"],
             portfolio_context["decision"],
             portfolio_context["rebalancing"],
+            portfolio_context["unified_decision"],
         )
 
         dashboard = (
@@ -232,6 +249,7 @@ class CIOEngine:
             portfolio_context["analysis"],
             portfolio_context["decision"],
             portfolio_context["rebalancing"],
+            portfolio_context["unified_decision"],
         )
 
         self.context["report"] = report

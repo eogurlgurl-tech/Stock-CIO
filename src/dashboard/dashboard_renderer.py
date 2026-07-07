@@ -30,6 +30,22 @@ class DashboardRenderer:
             news_list,
         )
 
+        korea_data_status = (
+            "AVAILABLE"
+            if market.kospi and market.kosdaq
+            else "UNAVAILABLE"
+        )
+        us_data_status = (
+            "AVAILABLE"
+            if market.nasdaq and market.sp500 and market.vix
+            else "UNAVAILABLE"
+        )
+        news_data_status = (
+            "AVAILABLE"
+            if news_list
+            else "UNAVAILABLE"
+        )
+
         return f"""
 ============================================================
                     STOCK-CIO DASHBOARD
@@ -42,6 +58,13 @@ Investment     : {decision.action}
 Overall Grade  : {score.grade} {score.stars}
 Cash Ratio     : {decision.cash_ratio}%
 Stock Ratio    : {decision.stock_ratio}%
+
+DATA STATUS
+------------------------------------------------------------
+Analysis Time  : {market.timestamp:%Y-%m-%d %H:%M:%S}
+Korea Market   : {korea_data_status}
+US Market      : {us_data_status}
+News           : {news_data_status}
 
 🌎 MARKET
 ------------------------------------------------------------

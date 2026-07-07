@@ -1,58 +1,63 @@
 # SESSION
 
-## Project
+Project
 
 STOCK-CIO
 
 Version
 
-v0.4.0-alpha
+v1.0.0-rc
 
 Sprint
 
-19
+20
 
 Date
 
-2026-07-06
+2026-07-07
 
 ---
 
 ## Goal
 
-Complete v0.4 MVP Portfolio Workflow.
+Complete the final safety and usability requirements for v1.0.
 
 ---
 
-## Completed
+## Implemented
 
-- FEATURE-026 Target Portfolio Pipeline
-- FEATURE-027 Portfolio Data Integration
-- YAML Portfolio configuration loading
-- Input validation
-- Configured Portfolio end-to-end test
-- Dashboard and MorningBrief output verification
-
----
-
-## Final Verification
-
-Build
-
-PASS
-
-Unit Test
-
-149 Passed
-
-Regression
-
-Zero
+- Fixed recursive 30% maximum-weight redistribution.
+- Added 1.0%p rebalancing tolerance.
+- Added UnifiedDecision and UnifiedDecisionEngine.
+- Added final action and Korean decision reason.
+- Added current, target, difference, and action output.
+- Added market and news data status.
+- Removed internal System Context from desktop output.
+- Connected Yahoo Finance news collection.
+- Updated Windows GUI localization and build workflow.
 
 ---
 
-## Result
+## Verification Status
 
-v0.4 MVP development is complete.
+Previous baseline
 
-Remaining work is repository review, commit, and release preparation.
+162 Passed
+
+Current changes
+
+Verified
+
+Result
+
+172 passed in 2.25s
+
+Package output
+
+dist\STOCK-CIO\STOCK-CIO.exe
+
+---
+
+## Next Action
+
+Release validation and deployment preparation.

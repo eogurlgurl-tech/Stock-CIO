@@ -16,7 +16,7 @@ from src.models.score import Score
 class MorningBrief:
     """Morning Brief Report Generator."""
 
-    VERSION = "v0.4.0-alpha"
+    VERSION = "v1.0.0-rc"
 
     def _generate_global_summary(self, market: MarketSnapshot) -> str:
 
