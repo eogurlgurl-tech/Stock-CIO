@@ -40,6 +40,7 @@ from src.services.unified_decision_engine import (
     UnifiedDecisionEngine,
 )
 from src.utils.logger import Logger
+from src.services.price_updater import update_portfolio_prices
 
 
 class CIOEngine:
@@ -203,6 +204,13 @@ class CIOEngine:
         """Render dashboard."""
 
         print("[7/8] Dashboard")
+
+        # Refresh live prices for portfolio positions before rendering
+        portfolio_context = self.context.get("portfolio")
+        if portfolio_context:
+            update_portfolio_prices(
+                portfolio_context["portfolio"]
+            )
 
         dashboard = self.dashboard.render(
             self.context["market"],
