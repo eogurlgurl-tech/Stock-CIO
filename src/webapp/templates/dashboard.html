@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="ko">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>STOCK-CIO Web Dashboard</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 24px; background: #f5f7fb; color: #222; }
+        h1 { margin-bottom: 16px; }
+        button { padding: 12px 20px; font-size: 1rem; }
+        pre { background: #1a1a1d; color: #f8f8f2; padding: 18px; border-radius: 8px; overflow-x: auto; white-space: pre-wrap; }
+        .meta { margin-bottom: 12px; }
+        .notice { margin: 16px 0; padding: 12px; background: #fff3cd; border: 1px solid #ffeeba; border-radius: 8px; }
+    </style>
+</head>
+<body>
+    <h1>STOCK-CIO Web Dashboard</h1>
+    <form action="{{ url_for('run_analysis') }}" method="post">
+        <button type="submit">분석 실행</button>
+    </form>
+
+    {% if timestamp %}
+    <div class="meta">
+        <strong>마지막 실행:</strong> {{ timestamp }}
+    </div>
+    {% endif %}
+
+    {% if output %}
+    <div class="notice">실행 결과를 아래에서 확인하세요.</div>
+    <pre>{{ output }}</pre>
+    {% else %}
+    <div class="notice">분석 실행 버튼을 눌러 대시보드를 생성하세요.</div>
+    {% endif %}
+</body>
+</html>

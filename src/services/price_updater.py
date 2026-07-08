@@ -4,6 +4,8 @@ Price Updater Service
 Update `Position.current_price` values from market data sources.
 """
 
+import os
+from contextlib import redirect_stderr, redirect_stdout
 from datetime import datetime, timedelta
 from typing import Optional
 
@@ -39,7 +41,6 @@ def _try_yfinance_price(ticker: str) -> tuple[Optional[float], str | None]:
         except Exception:
             continue
 
-    return None
     return None, None
 
 
@@ -49,13 +50,14 @@ def _try_pykrx_price(ticker: str) -> tuple[Optional[float], str | None]:
         return None, None
 
     try:
-        from pykrx import stock
+        with open(os.devnull, "w") as devnull, redirect_stdout(devnull), redirect_stderr(devnull):
+            from pykrx import stock
 
-        today = datetime.now()
-        from_date = (today - timedelta(days=7)).strftime("%Y%m%d")
-        to_date = today.strftime("%Y%m%d")
+            today = datetime.now()
+            from_date = (today - timedelta(days=7)).strftime("%Y%m%d")
+            to_date = today.strftime("%Y%m%d")
 
-        frame = stock.get_market_ohlcv_by_date(from_date, to_date, ticker)
+            frame = stock.get_market_ohlcv_by_date(from_date, to_date, ticker)
 
         if frame is None or frame.empty:
             return None, None
@@ -85,23 +87,22 @@ def update_portfolio_prices(portfolio) -> None:
 
         if not isinstance(ticker, str) or not ticker:
             continue
-        # Prefer pykrx for Korean 6-digit tickers
+        # Prefer Yahoo Finance first, then fallback to pykrx for KRX tickers.
         price = None
         source = None
         ts = None
 
-        if ticker.isdigit() and len(ticker) == 6:
+        p, p_ts = _try_yfinance_price(ticker)
+        if p is not None:
+            price = p
+            source = "yfinance"
+            ts = p_ts
+
+        if price is None and ticker.isdigit() and len(ticker) == 6:
             p, p_ts = _try_pykrx_price(ticker)
             if p is not None:
                 price = p
                 source = "pykrx"
-                ts = p_ts
-
-        if price is None:
-            p, p_ts = _try_yfinance_price(ticker)
-            if p is not None:
-                price = p
-                source = "yfinance"
                 ts = p_ts
 
         if price is not None:

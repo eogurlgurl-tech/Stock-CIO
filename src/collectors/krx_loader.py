@@ -4,6 +4,8 @@ KRX Loader
 Stock-CIO
 """
 
+import os
+from contextlib import redirect_stderr, redirect_stdout
 from datetime import datetime, timedelta
 
 import yfinance as yf
@@ -84,19 +86,23 @@ class KRXLoader(BaseLoader):
         """Load a Korean index through pykrx as fallback."""
 
         try:
-            from pykrx import stock
+            import os
+            from contextlib import redirect_stderr, redirect_stdout
 
-            today = datetime.now()
-            from_date = (
-                today - timedelta(days=10)
-            ).strftime("%Y%m%d")
-            to_date = today.strftime("%Y%m%d")
+            with open(os.devnull, "w") as devnull, redirect_stdout(devnull), redirect_stderr(devnull):
+                from pykrx import stock
 
-            frame = stock.get_index_ohlcv_by_date(
-                fromdate=from_date,
-                todate=to_date,
-                ticker=ticker,
-            )
+                today = datetime.now()
+                from_date = (
+                    today - timedelta(days=10)
+                ).strftime("%Y%m%d")
+                to_date = today.strftime("%Y%m%d")
+
+                frame = stock.get_index_ohlcv_by_date(
+                    fromdate=from_date,
+                    todate=to_date,
+                    ticker=ticker,
+                )
 
             if not self.has_enough_data(frame):
                 return None
@@ -112,10 +118,7 @@ class KRXLoader(BaseLoader):
                 ),
             )
 
-        except Exception as error:
-            print(
-                f"pykrx Loader Error ({ticker}) : {error}"
-            )
+        except Exception:
             return None
 
     def load(self) -> MarketSnapshot:
